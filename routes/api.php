@@ -25,4 +25,4 @@ Route::get('/forecast/{country}/{province}/{city}/{locale?}', function (Request 
 	return $request->user();
 });
 
-Route::get('/national/{locale?}', "NationalController@get");
+Route::get('/national', "NationalController@get");
