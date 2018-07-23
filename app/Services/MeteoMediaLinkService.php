@@ -37,7 +37,7 @@ class MeteoMediaLinkService
 			return $cachedRecord;
 
 		// No cached record, let's retrieve a new one
-		$url = $this->buildURL($endpoint['url'], $country, $province, $city);
+		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
 
 		$client = new Client();
 		$res = $client->request('GET', $url);
@@ -55,12 +55,12 @@ class MeteoMediaLinkService
 		return json_decode($response);
 	}
 
-	private function buildURL(string $url, string $country, string $province, string $city) {
+	private function buildURL(string $url, string $country, string $province, string $city, string $locale) {
 		$url .= "/" . $country;
 		$url .= "/" . $province;
 		$url .= "/" . $city;
 		$url .= "?user_key=" . $_ENV['METEO_MEDIA_KEY'];
-		$url .= "&locale=" . "en_CA";
+		$url .= "&locale=" . $locale;
 
 		return $url;
 	}

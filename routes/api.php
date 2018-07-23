@@ -13,19 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/now/{country}/{province}/{city}', function (Request $request) {
+Route::get('/now/{country}/{province}/{city}/{locale?}', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/tomorrow/{country}/{province}/{city}', function (Request $request) {
+Route::get('/tomorrow/{country}/{province}/{city}/{locale?}', function (Request $request) {
 	return $request->user();
 });
 
-Route::get('/forecast/{country}/{province}/{city}', function (Request $request) {
+Route::get('/forecast/{country}/{province}/{city}/{locale?}', function (Request $request) {
 	return $request->user();
 });
 
-Route::get('/national', function (Request $request) {
-	$controller = new \App\Http\Controllers\NationalController();
-	return $controller->get($request);
-});
+Route::get('/national/{locale?}', "NationalController@get");

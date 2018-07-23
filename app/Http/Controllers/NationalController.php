@@ -25,8 +25,7 @@ class NationalController extends Controller
 	 * @param Request $request
 	 * @return Response
 	 */
-    public function get(Request $request): Response {
-    	$locale = "en-CA";
+    public function get(Request $request, String $locale = "en-CA"): Response {
 		$forecasts = [];
 		$link = new MeteoMediaLinkService();
 

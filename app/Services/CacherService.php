@@ -16,7 +16,7 @@ class CacherService
 	/**
 	 * Tries to retrieve the asked record from the ddb
 	 * If the record is retrieven but is too old, it will be removed
-	 * @param string $period
+	 * @param string $endpoint
 	 * @param string $country
 	 * @param string $province
 	 * @param string $city
@@ -24,11 +24,12 @@ class CacherService
 	 * @return The record or NULL
 	 */
 	public function get(string $endpoint, string $country, string $province, string $city, string $locale) {
-		$records = Record::where("endpoint", $endpoint)
-			->where("country", $country)
-			->where("province", $province)
-			->where("city", $city)
-			->where("locale", $locale)
+		$records = Record::where([
+			"endpoint" => $endpoint,
+			"country" => $country,
+			"province" => $province,
+			"city" => $city,
+			"locale" => $locale])
 			->get();
 
 		// No record found, stop here
