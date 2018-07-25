@@ -40,7 +40,7 @@ class CacherService
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
-		if($lastUpdate->getTimestamp() + $_ENV['RECORD_LIFESPAN'] < time()) {
+		if($lastUpdate->getTimestamp() + env('RECORD_LIFESPAN', 0) < time()) {
 			$record->delete();
 			return null;
 		}

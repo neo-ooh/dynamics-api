@@ -68,7 +68,7 @@ class MeteoMediaLinkService
 		$url .= "/" . $country;
 		$url .= "/" . $province;
 		$url .= "/" . $city;
-		$url .= "?user_key=" . $_ENV['METEO_MEDIA_KEY'];
+		$url .= "?user_key=" . env('METEO_MEDIA_KEY', '');
 		$url .= "&locale=" . $locale;
 
 		return $url;

@@ -27,7 +27,7 @@ class NationalController extends Controller
 	 * @param Request $request
 	 * @return Response
 	 */
-    public function get(Request $request): Response {
+    public function get() {
 		$forecasts = [];
 		$link = new MeteoMediaLinkService();
 

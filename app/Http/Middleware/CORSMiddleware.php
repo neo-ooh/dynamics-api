@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Response;
 
-class CORS
+class CORSMiddleware
 {
 
 	/**
@@ -22,12 +23,11 @@ class CORS
 		// ALLOW OPTIONS METHOD
 		$headers = [
 			'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-			'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin'
+			'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, pragma, cache-control'
 		];
 
 		if ($request->getMethod() == "OPTIONS") {
 			echo "OPTION";
-			http_response_code(200);
 			// The client-side application can set only headers allowed in Access-Control-Allow-Headers
 			return Response::make('OK', 200, $headers);
 		}
@@ -36,6 +36,7 @@ class CORS
 		foreach ($headers as $key => $value) {
 			$response->header($key, $value);
 		}
+
 		return $response;
 	}
 
