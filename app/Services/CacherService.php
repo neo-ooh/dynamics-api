@@ -46,7 +46,7 @@ class CacherService
 		}
 
 		// Record OK, let's return it
-		return json_decode($record->content);
+		return json_decode($record->content, true);
 	}
 
 	public function set(string $endpoint, string $country, string $province, string $city, string $locale, string $content) {

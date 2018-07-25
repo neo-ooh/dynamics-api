@@ -19,6 +19,7 @@ class MeteoMediaLinkService
 	const ENDPOINT_OBS = ["id" => "obs", "url" => self::OBS_URL];
 	const ENDPOINT_LNG = ["id" => "lng", "url" => self::LNG_URL];
 
+
 	public function getNow(string ...$params) {
 		return $this->getRecord(self::ENDPOINT_OBS, ...$params);
 	}
@@ -27,6 +28,14 @@ class MeteoMediaLinkService
 		return $this->getRecord(self::ENDPOINT_LNG, ...$params);
 	}
 
+	/**
+	 * @param        $endpoint
+	 * @param string $locale
+	 * @param string $country
+	 * @param string $province
+	 * @param string $city
+	 * @return The|mixed|void
+	 */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city) {
 		// Start by checking cache for presence
 		$cache = new CacherService();
@@ -52,7 +61,7 @@ class MeteoMediaLinkService
 		// Let's cache it!
 		$cache->set($endpoint['id'], $country, $province, $city, $locale, $response);
 
-		return json_decode($response);
+		return json_decode($response, true);
 	}
 
 	private function buildURL(string $url, string $country, string $province, string $city, string $locale) {
