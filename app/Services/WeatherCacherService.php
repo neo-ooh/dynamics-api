@@ -11,7 +11,7 @@ namespace App\Services;
 
 use App\Record;
 
-class CacherService
+class WeatherCacherService
 {
 	/**
 	 * Tries to retrieve the asked record from the ddb

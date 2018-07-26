@@ -13,7 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/now/{country}/{province}/{city}', "NowController@get");
-Route::get('/tomorrow/{country}/{province}/{city}', "TomorrowController@get");
-Route::get('/forecast/{country}/{province}/{city}', "ForecastController@get");
-Route::get('/national', "NationalController@get");
+/**
+ * Weeather dynamic routes
+ */
+Route::prefix('weather')->group(function () {
+	Route::get('now/{country}/{province}/{city}', "WeatherController@now");
+	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow");
+	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast");
+	Route::get('national', "WeatherController@national");
+});
