@@ -13,12 +13,24 @@ use Illuminate\Http\Request;
 |
 */
 
-/**
- * Weeather dynamic routes
+/*
+ * DYNAMIC Main API
  */
-Route::prefix('weather')->group(function () {
-	Route::get('now/{country}/{province}/{city}', "WeatherController@now");
-	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow");
-	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast");
-	Route::get('national', "WeatherController@national");
+Route::resource('keys', 'KeysController')->only([
+	'index', 'show', 'store', 'edit', 'update', 'destroy'
+]);
+
+
+///////////////
+// The Dynamics
+
+/**
+ * Weather dynamic routes
+ */
+Route::group(['prefix' => 'weather', 'middleware' => 'APIencapsulation'], function () {
+	Route::get('now/{country}/{province}/{city}', "WeatherController@now")->name("weather.now");
+	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
+	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");
+	Route::get('national', "WeatherController@national")->name("weather.national");
 });
+
