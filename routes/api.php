@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  * DYNAMIC Main API
  */
 Route::resource('keys', 'KeysController')->only([
-	'index', 'show', 'store', 'edit', 'update', 'destroy'
+	'index', 'show', 'store', 'update', 'destroy'
 ]);
 
 
@@ -27,7 +27,7 @@ Route::resource('keys', 'KeysController')->only([
 /**
  * Weather dynamic routes
  */
-Route::group(['prefix' => 'weather', 'middleware' => 'APIencapsulation'], function () {
+Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weather', 'APIEncapsulation']], function () {
 	Route::get('now/{country}/{province}/{city}', "WeatherController@now")->name("weather.now");
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");

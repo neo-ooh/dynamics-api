@@ -10,11 +10,11 @@ use App\Key;
 class KeysController extends Controller
 {
     public function index() {
-		return new Response(Key::with('authorizations')->get());
+		return new Response(Key::with('dynamics')->get());
     }
 
     public function show(int $keyID) {
-    	$key = Key::where('id', $keyID)->with('authorizations')->first();
+    	$key = Key::where('id', $keyID)->with('dynamics')->first();
     	return new Response($key);
     }
 
@@ -41,12 +41,34 @@ class KeysController extends Controller
 		return $this->show($key->id);
 	}
 
-	public function edit(int $keyID) {
+	public function update(int $keyID, Request $request) {
+		$data = $request->validate([
+			'name' => 'required|string|min:3'
+		]);
 
-	}
+		// Check for duplicate name
+		$keys = Key::where('name', $data['name'])->get();
 
-	public function update(int $keyID) {
+		if(count($keys) != 0) {
+			// Name already used
+			if($keys[0]->id != $keyID)
+				return new Response([
+					"message" => "The given data was invalid.",
+	                "errors" => [
+	                    "name" => [
+							"The name is already taken"
+						]
+	                ]
+				], 422);
+			else
+				return $this->show($keyID); // Same name, do nothing
+		}
 
+		$key = Key::where('id', $keyID)->first();
+		$key->name = $data['name'];
+		$key->save();
+
+		return $this->show($keyID);
 	}
 
 	public function destroy(int $keyID) {

@@ -15,8 +15,11 @@ class CreateDynamicsTable extends Migration
     {
         Schema::create('dynamics', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('name', 10);
+	        $table->char('slug', 10);
+            $table->char('name', 25);
             $table->timestamps();
+
+            $table->unique('slug');
         });
     }
 

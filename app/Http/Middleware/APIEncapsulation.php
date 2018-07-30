@@ -17,13 +17,16 @@ class APIEncapsulation
 	 */
 	public function handle($request, Closure $next)
 	{
-		$response = json_decode($next($request)->content(), true);
+		$response = $next($request);
+		$responseJSON = json_decode($response->content(), true);
 		$formated = [
 			"timestamp" => time(),
 			"refresh" => env('RECORD_LIFESPAN', 0),
-			"content" => $response];
+			"content" => $responseJSON];
 
-		return new Response($formated);
+		$response->setContent($formated);
+
+		return $response;
 	}
 
 }

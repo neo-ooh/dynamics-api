@@ -14,12 +14,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        Middleware\CheckForMaintenanceMode::class,
+	    \App\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        Middleware\TrimStrings::class,
+	    \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        Middleware\TrustProxies::class,
-	    Middleware\CORSMiddleware::class
+	    \App\Http\Middleware\TrustProxies::class,
+	    \App\Http\Middleware\CORSMiddleware::class
     ];
 
     /**
@@ -29,12 +29,12 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            Middleware\EncryptCookies::class,
+	        \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            Middleware\VerifyCsrfToken::class,
+	        \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'APIEncapsulation' => Middleware\APIEncapsulation::class
+        'APIEncapsulation' => \App\Http\Middleware\APIEncapsulation::class,
+        'APIKeyVerification' => \App\Http\Middleware\APIKeyVerification::class
     ];
 }
