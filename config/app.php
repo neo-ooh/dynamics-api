@@ -211,4 +211,9 @@ return [
 
     ],
 
+
+	'api' => [
+		'lifespan' => env('RECORD_LIFESPAN', 3600),
+		'meteoMediaKey' => env('METEO_MEDIA_KEY', '')
+	]
 ];

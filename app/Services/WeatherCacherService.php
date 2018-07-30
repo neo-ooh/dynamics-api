@@ -40,7 +40,7 @@ class WeatherCacherService
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
-		if($lastUpdate->getTimestamp() + env('RECORD_LIFESPAN', 0) < time()) {
+		if($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
 			$record->delete();
 			return null;
 		}
