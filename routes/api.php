@@ -16,21 +16,45 @@ use Illuminate\Http\Request;
 /*
  * DYNAMIC Main API
  */
+
+// AUTH
+Route::group(['prefix' => 'auth'], function () {
+	Route::post('login', "AuthController@login")->name("auth.login");
+	Route::get('logout', "AuthController@logout")->name("auth.logout")->middleware("UserTokenVerification");
+});
+
+// The Keys
+Route::model('key', 'App\Key');
 Route::resource('keys', 'KeysController')->only([
 	'index', 'show', 'store', 'update', 'destroy'
 ]);
 
 
-///////////////
-// The Dynamics
+// Dynamics
+Route::group(['prefix' => "dynamics", "middleware" => "UserTokenVerification"], function () {
+	//Weather dynamic
+	Route::group(['prefix' => "weather"], function () {
+		// Backgrounds
+		Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities");
+		Route::model('background', 'App\WeatherBackground');
+		Route::resource("backgrounds", "WeatherBackgroundController")->only([
+			'index', 'show', 'store', 'destroy'
+		]);
+	});
+});
+
+
+
+
+///////////////////
+// The Dynamics API
 
 /**
  * Weather dynamic routes
  */
-Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weather', 'APIEncapsulation']], function () {
+Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weather']], function () {
 	Route::get('now/{country}/{province}/{city}', "WeatherController@now")->name("weather.now");
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");
 	Route::get('national', "WeatherController@national")->name("weather.national");
 });
-

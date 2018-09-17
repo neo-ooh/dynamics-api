@@ -9,15 +9,26 @@ use App\Key;
 
 class KeysController extends Controller
 {
+	/**
+	 * @return Response
+	 */
     public function index() {
 		return new Response(Key::with('dynamics')->get());
     }
 
-    public function show(int $keyID) {
-    	$key = Key::where('id', $keyID)->with('dynamics')->first();
+	/**
+	 * @param Key $key
+	 * @return Response
+	 */
+    public function show(Key $key) {
     	return new Response($key);
     }
 
+	/**
+	 * @param Request $request
+	 * @return Response
+	 * @throws \Exception
+	 */
 	public function store(Request $request) {
 		$data = $request->validate([
 			'name' => 'required|string|min:3|unique:keys',
@@ -38,10 +49,10 @@ class KeysController extends Controller
 			$auth->save();
 		}
 
-		return $this->show($key->id);
+		return $this->show($key);
 	}
 
-	public function update(int $keyID, Request $request) {
+	public function update(Key $key, Request $request) {
 		$data = $request->validate([
 			'name' => 'required|string|min:3'
 		]);
@@ -51,7 +62,7 @@ class KeysController extends Controller
 
 		if(count($keys) != 0) {
 			// Name already used
-			if($keys[0]->id != $keyID)
+			if($keys[0]->id != $key->id)
 				return new Response([
 					"message" => "The given data was invalid.",
 	                "errors" => [
@@ -61,17 +72,19 @@ class KeysController extends Controller
 	                ]
 				], 422);
 			else
-				return $this->show($keyID); // Same name, do nothing
+				return $this->show($key); // Same name, do nothing
 		}
 
-		$key = Key::where('id', $keyID)->first();
 		$key->name = $data['name'];
 		$key->save();
 
-		return $this->show($keyID);
+		return $this->show($key);
 	}
 
-	public function destroy(int $keyID) {
-		$key = Key::destroy($keyID);
+	/**
+	 * @param Key $key
+	 */
+	public function destroy(Key $key) {
+		$key = Key::destroy($key);
 	}
 }

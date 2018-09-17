@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\Input;
 class weatherController extends Controller
 {
 	private $cities = [
+		["CA", "ON", "Toronto"],
+		["CA", "ON", "Ottawa"],
+		["CA", "QC", "Montreal"],
+		["CA", "QC", "Quebec"],
+		["CA", "NS", "Halifax"],
+		["CA", "BC", "Victoria"],
 		["CA", "BC", "Vancouver"],
-		["CA", "ON", "Mississauga"],
 		["CA", "AB", "Calgary"],
 		["CA", "AB", "Edmonton"],
-		["CA", "NS", "Halifax"],
-		["CA", "ON", "Toronto"],
-		["CA", "BC", "Victoria"],
-		["CA", "QC", "Quebec"],
-		["CA", "QC", "Montreal"],
-		["CA", "ON", "Ottawa"]
+		["CA", "MB", "Winnipeg"],
 	];
 
 	/**
