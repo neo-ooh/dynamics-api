@@ -20,11 +20,13 @@ class MeteoMediaLinkService
 	const ENDPOINT_LNG = ["id" => "lng", "url" => self::LNG_URL];
 
 
-	public function getNow(string ...$params) {
+	public function getNow(string ...$params)
+	{
 		return $this->getRecord(self::ENDPOINT_OBS, ...$params);
 	}
 
-	public function getNext(string ...$params) {
+	public function getNext(string ...$params)
+	{
 		return $this->getRecord(self::ENDPOINT_LNG, ...$params);
 	}
 
@@ -36,14 +38,16 @@ class MeteoMediaLinkService
 	 * @param string $city
 	 * @return The|mixed|void
 	 */
-	private function getRecord($endpoint, string $locale, string $country, string $province, string $city) {
+	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
+	{
 		// Start by checking cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
 		// Cached record was found, let's return it
-		if($cachedRecord != null)
+		if ($cachedRecord != null) {
 			return $cachedRecord;
+		}
 
 		// No cached record, let's retrieve a new one
 		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
@@ -52,8 +56,9 @@ class MeteoMediaLinkService
 		$res = $client->request('GET', $url);
 
 		// Error
-		if($res->getStatusCode() != 200)
-			return; //TODO DO SOMETHING TO HANDLE ERRORS
+		if ($res->getStatusCode() != 200) {
+			return;
+		} //TODO DO SOMETHING TO HANDLE ERRORS
 
 		// Here's our response
 		$response = $res->getBody()->getContents();
@@ -64,7 +69,8 @@ class MeteoMediaLinkService
 		return json_decode($response, true);
 	}
 
-	private function buildURL(string $url, string $country, string $province, string $city, string $locale) {
+	private function buildURL(string $url, string $country, string $province, string $city, string $locale)
+	{
 		$url .= "/" . $country;
 		$url .= "/" . $province;
 		$url .= "/" . $city;

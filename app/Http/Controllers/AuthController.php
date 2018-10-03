@@ -11,22 +11,25 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-	public function login(Request $request) {
+	public function login(Request $request)
+	{
 		$data = $request->validate([
 			'email' => 'required|string',
 			'password' => 'required|string',
 		]);
 
 		$user = User::where('user_email', $data['email'])
-					->where('user_admin', true)
-					->where('user_live', true)
-					->first();
+			->where('user_admin', true)
+			->where('user_live', true)
+			->first();
 
-		if(!$user)
+		if (!$user) {
 			return $this->onError("Given user email is invalid");
+		}
 
-		if(!password_verify($data['password'], $user['user_password']))
+		if (!password_verify($data['password'], $user['user_password'])) {
 			return $this->onError('Given password is incorrect');
+		}
 
 		// Correct login information
 		// Remove existing token that may be left
@@ -50,7 +53,8 @@ class AuthController extends Controller
 	}
 
 
-	public function logout(Request $request) {
+	public function logout(Request $request)
+	{
 		AuthToken::where('user', $request->get('user'))->delete();
 
 		return new Response([
@@ -59,7 +63,8 @@ class AuthController extends Controller
 	}
 
 
-	private function onError(string $msg) {
+	private function onError(string $msg)
+	{
 		return new Response([
 			"content" => [
 				"error" => true,

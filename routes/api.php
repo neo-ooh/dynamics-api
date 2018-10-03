@@ -34,8 +34,16 @@ Route::resource('keys', 'KeysController')->only([
 Route::group(['prefix' => "dynamics", "middleware" => "UserTokenVerification"], function () {
 	//Weather dynamic
 	Route::group(['prefix' => "weather"], function () {
+		//////////////
 		// Backgrounds
-		Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities");
+
+		// Backgrounds cities list
+		Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities")->name("backgrounds.cities");
+
+		// Background selection method
+		Route::post("backgrounds/selection", "WeatherBackgroundController@setSelectionMethod")->name("backgrounds.selection");
+
+		// Single backgrounds CRUD
 		Route::model('background', 'App\WeatherBackground');
 		Route::resource("backgrounds", "WeatherBackgroundController")->only([
 			'index', 'show', 'store', 'destroy'

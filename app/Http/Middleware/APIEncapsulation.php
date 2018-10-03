@@ -15,10 +15,14 @@ class APIEncapsulation
 	 * @param  \Closure                 $next
 	 * @return mixed
 	 */
-	public function handle($request, Closure $next): Response
+	public function handle($request, Closure $next)
 	{
 		$response = $next($request);
-		$responseJSON = json_decode($response->content(), true);
+		$responseJSON = json_decode($response->content(), true) ?: [];
+
+		if(array_key_exists('content', $responseJSON))
+			$responseJSON = $responseJSON['content'];
+
 		$formated = [
 			"timestamp" => time(),
 			"refresh" => env('RECORD_LIFESPAN', 0),
@@ -26,7 +30,7 @@ class APIEncapsulation
 			"status" => $response->getStatusCode()
 		];
 
-		$response->setContent($formated);
+		$response->setContent(json_encode($formated));
 
 		return $response;
 	}

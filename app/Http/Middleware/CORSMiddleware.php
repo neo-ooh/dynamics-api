@@ -23,7 +23,7 @@ class CORSMiddleware
 		// ALLOW OPTIONS METHOD
 		$headers = [
 			'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-			'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, pragma, cache-control'
+			'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, pragma, cache-control, Authorization'
 		];
 
 		if ($request->getMethod() == "OPTIONS") {

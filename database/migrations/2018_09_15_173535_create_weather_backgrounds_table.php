@@ -22,8 +22,6 @@ class CreateWeatherBackgroundsTable extends Migration
             $table->string('period', 10);
             $table->string('support', 3);
             $table->timestamps();
-
-            $table->unique(['country', 'province', 'city', 'weather', 'period', 'support']);
         });
     }
 

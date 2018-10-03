@@ -23,24 +23,27 @@ class WeatherCacherService
 	 * @param string $locale
 	 * @return The record or NULL
 	 */
-	public function get(string $endpoint, string $country, string $province, string $city, string $locale) {
+	public function get(string $endpoint, string $country, string $province, string $city, string $locale)
+	{
 		$records = Record::where([
 			"endpoint" => $endpoint,
 			"country" => $country,
 			"province" => $province,
 			"city" => $city,
-			"locale" => $locale])
+			"locale" => $locale
+		])
 			->get();
 
 		// No record found, stop here
-		if(count($records) == 0)
+		if (count($records) == 0) {
 			return null;
+		}
 
 		$record = $records[0];
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
-		if($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
+		if ($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
 			$record->delete();
 			return null;
 		}
@@ -49,7 +52,14 @@ class WeatherCacherService
 		return json_decode($record->content, true);
 	}
 
-	public function set(string $endpoint, string $country, string $province, string $city, string $locale, string $content) {
+	public function set(
+		string $endpoint,
+		string $country,
+		string $province,
+		string $city,
+		string $locale,
+		string $content
+	) {
 		$record = new Record();
 		$record->endpoint = $endpoint;
 		$record->country = $country;

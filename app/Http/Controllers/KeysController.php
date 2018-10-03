@@ -9,27 +9,33 @@ use App\Key;
 
 class KeysController extends Controller
 {
+	function __construct() {
+		$this->middleware('UserTokenVerification');
+	}
 	/**
 	 * @return Response
 	 */
-    public function index() {
+	public function index()
+	{
 		return new Response(Key::with('dynamics')->get());
-    }
+	}
 
 	/**
 	 * @param Key $key
 	 * @return Response
 	 */
-    public function show(Key $key) {
-    	return new Response($key);
-    }
+	public function show(Key $key)
+	{
+		return new Response($key);
+	}
 
 	/**
 	 * @param Request $request
 	 * @return Response
 	 * @throws \Exception
 	 */
-	public function store(Request $request) {
+	public function store(Request $request)
+	{
 		$data = $request->validate([
 			'name' => 'required|string|min:3|unique:keys',
 			'dynamics' => 'sometimes|array',
@@ -52,7 +58,8 @@ class KeysController extends Controller
 		return $this->show($key);
 	}
 
-	public function update(Key $key, Request $request) {
+	public function update(Key $key, Request $request)
+	{
 		$data = $request->validate([
 			'name' => 'required|string|min:3'
 		]);
@@ -60,19 +67,20 @@ class KeysController extends Controller
 		// Check for duplicate name
 		$keys = Key::where('name', $data['name'])->get();
 
-		if(count($keys) != 0) {
+		if (count($keys) != 0) {
 			// Name already used
-			if($keys[0]->id != $key->id)
+			if ($keys[0]->id != $key->id) {
 				return new Response([
 					"message" => "The given data was invalid.",
-	                "errors" => [
-	                    "name" => [
+					"errors" => [
+						"name" => [
 							"The name is already taken"
 						]
-	                ]
+					]
 				], 422);
-			else
-				return $this->show($key); // Same name, do nothing
+			} else {
+				return $this->show($key);
+			} // Same name, do nothing
 		}
 
 		$key->name = $data['name'];
@@ -84,7 +92,8 @@ class KeysController extends Controller
 	/**
 	 * @param Key $key
 	 */
-	public function destroy(Key $key) {
+	public function destroy(Key $key)
+	{
 		$key = Key::destroy($key);
 	}
 }

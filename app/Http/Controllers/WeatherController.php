@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use App\Services\MeteoMediaLinkService;
 use Illuminate\Support\Facades\Input;
 
-class weatherController extends Controller
+class WeatherController extends Controller
 {
 	private $cities = [
 		["CA", "ON", "Toronto"],
@@ -26,7 +26,8 @@ class weatherController extends Controller
 	 * Gives the national weather
 	 * @return Response
 	 */
-	public function national(): Response {
+	public function national(): Response
+	{
 		$forecasts = [];
 		$link = new MeteoMediaLinkService();
 
@@ -41,12 +42,13 @@ class weatherController extends Controller
 
 	/**
 	 * Give the current weather for the specified city
-	 * @param String $country CA
+	 * @param String $country  CA
 	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city Toronto|Montreal|etc.
+	 * @param String $city     Toronto|Montreal|etc.
 	 * @return Response
 	 */
-	public function now(String $country, String $province, String $city): Response {
+	public function now(String $country, String $province, String $city): Response
+	{
 		$link = new MeteoMediaLinkService();
 
 		$locale = Input::get('locale', 'en-CA');
@@ -61,12 +63,13 @@ class weatherController extends Controller
 
 	/**
 	 * Give the next day weather for the specified location
-	 * @param String $country CA
+	 * @param String $country  CA
 	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city Toronto|Montreal|etc.
+	 * @param String $city     Toronto|Montreal|etc.
 	 * @return Response
 	 */
-	public function tomorrow(String $country, String $province, String $city): Response {
+	public function tomorrow(String $country, String $province, String $city): Response
+	{
 		$link = new MeteoMediaLinkService();
 
 		$locale = Input::get('locale', 'en-CA');
@@ -80,12 +83,13 @@ class weatherController extends Controller
 
 	/**
 	 * Give the seven days weather for the specified location
-	 * @param String $country CA
+	 * @param String $country  CA
 	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city Toronto|Montreal|etc.
+	 * @param String $city     Toronto|Montreal|etc.
 	 * @return Response
 	 */
-	public function forecast(String $country, String $province, String $city): Response {
+	public function forecast(String $country, String $province, String $city): Response
+	{
 		$link = new MeteoMediaLinkService();
 
 		$locale = Input::get('locale', 'en-CA');
