@@ -16,8 +16,11 @@ class WeatherBackgroundController extends Controller
 	public function registeredCities()
 	{
 		return new Response([
-			'cities' => WeatherLocation::orderBy('city')
-				->groupBy('city')->pluck('city')->toArray()
+			'cities' => WeatherLocation::select('country', 'province', 'city')
+				->orderBy('city')
+				->groupBy('country', 'province', 'city')
+				->get()
+				->toArray()
 		]);
 	}
 
@@ -31,7 +34,7 @@ class WeatherBackgroundController extends Controller
 
 		$locationValues = $this->handleLocationValues($request);
 
-		return new Response(WeatherLocation::firstOrCreate($locationValues, $data));
+		return new Response(WeatherLocation::UpdateOrCreate($locationValues, ['selection' => $data['selection']]));
 	}
 
 	/**
@@ -46,29 +49,101 @@ class WeatherBackgroundController extends Controller
 			'country' => 'string|size:2',
 			'province' => 'string|size:2',
 			'city' => 'string|max:30',
-			'weather' => 'string|max:15',
 			'period' => 'string|max:10',
 			'support' => 'string|size:3',
 		]);
 
-		$backgrounds = WeatherBackground::when($request->weather, function ($query) use ($request) {
-			return $query->where('weather', $request->weather);
-		})->when($request->period, function ($query) use ($request) {
-			return $query->where('period', $request->period);
-		})->when($request->support, function ($query) use ($request) {
-			return $query->where('support', $request->support);
-		})->with(['location' => function($query) use ($request)
-		{
-			return $query->when($request->country, function ($query) use ($request) {
-				return $query->where('country', $request->country);
-			})->when($request->province, function ($query) use ($request) {
-				return $query->where('province', $request->province);
-			})->when($request->city, function ($query) use ($request) {
-				return $query->where('city', $request->city);
-			});
-		}])->get();
+		// Start by getting the canadians backgrounds
+		$locationCanadaParams = ['country' => 'CA', 'province' => '--', 'city' => '-'];
+		$locationCanada = WeatherLocation::firstOrCreate($locationCanadaParams, array_merge($locationCanadaParams, ['selection' => 'WEATHER']));
 
-		return new Response($backgrounds);
+		$backgroundsCanada = WeatherBackground::where('location', $locationCanada->id)
+			->when($request->period, function ($query) use ($request) {
+				return $query->where('period', $request->period);
+			})->when($request->support, function ($query) use ($request) {
+				return $query->where('support', $request->support);
+			})->with('location')->get();
+
+		// Get request location informations
+		$locationReqParams = $this->handleLocationValues($request);
+
+		// Is there a province in the request ?
+		if($locationReqParams['province'] == "--") {
+			// No province, we are not looking for more backgrounds. Let's stop here
+			return new Response([
+				'location' => $locationCanadaParams,
+				'selection' => $locationCanada->selection,
+				'backgrounds' => $backgroundsCanada]);
+		}
+
+		// There is a province, let's get its backgrounds
+		$locationProvinceParams = ['country' => 'CA', 'province' => $locationReqParams['province'], 'city' => '-'];
+		$locationProvince = WeatherLocation::firstOrCreate($locationProvinceParams, array_merge($locationProvinceParams, ['selection' => 'WEATHER']));
+
+		$backgroundsProvince = WeatherBackground::where('location', $locationProvince->id)
+			->when($request->period, function ($query) use ($request) {
+				return $query->where('period', $request->period);
+			})->when($request->support, function ($query) use ($request) {
+				return $query->where('support', $request->support);
+			})->with('location')->get();
+
+		$backgroundsProvince;
+
+		// Is the province and canada are both on WEATHER selection method ?
+		if($locationCanada->selection == $locationProvince->selection && $locationProvince->selection == 'WEATHER') {
+			// Yes, let's merge the two sets
+			$providedBackgrounds = [];
+			foreach($backgroundsProvince as $background) {
+				array_push($providedBackgrounds, $background->weather);
+			}
+
+			foreach($backgroundsCanada as $background) {
+				if(!in_array($background->weather, $providedBackgrounds)) {
+					$backgroundsProvince->push($background);
+					array_push($providedBackgrounds, $background->weather);
+				}
+			}
+		}
+
+		// Is there a city in the request ?
+		if($locationReqParams['city'] == "-") {
+			// No city, we are not looking for more backgrounds. Let's stop here
+			return new Response([
+				'location' => $locationProvince,
+				'selection' => $locationProvince->selection,
+				'backgrounds' => $backgroundsProvince]);
+		}
+
+		//There is a city, let's get it's backgrounds
+		$location = WeatherLocation::firstOrCreate($locationReqParams, array_merge($locationReqParams, ['selection' => 'WEATHER']));
+
+		$backgroundsLocation = WeatherBackground::where('location', $location->id)
+			->when($request->period, function ($query) use ($request) {
+				return $query->where('period', $request->period);
+			})->when($request->support, function ($query) use ($request) {
+				return $query->where('support', $request->support);
+			})->with('location')->get();
+
+		// Is the city and province are both on WEATHER selection method ?
+		if($locationProvince->selection == $location->selection && $location->selection == 'WEATHER') {
+			// Yes, let's merge the two sets
+			$providedBackgrounds = [];
+			foreach($backgroundsLocation as $background) {
+				array_push($providedBackgrounds, $background->weather);
+			}
+
+			foreach($backgroundsProvince as $background) {
+				if(!in_array($background->weather, $providedBackgrounds)) {
+					$backgroundsLocation->push($background);
+					array_push($providedBackgrounds, $background->weather);
+				}
+			}
+		}
+
+		return new Response([
+			'location' => $location,
+			'selection' => $location->selection,
+			'backgrounds' => $backgroundsLocation]);
 	}
 
 	/**
@@ -80,9 +155,9 @@ class WeatherBackgroundController extends Controller
 	public function store(Request $request)
 	{
 		$data = $request->validate([
-			'country' => 'string|size:2',
-			'province' => 'string|size:2',
-			'city' => 'string|max:30',
+			'country' => 'string|string|size:2',
+			'province' => 'string|string|size:2',
+			'city' => 'string|string|max:30',
 			'weather' => 'required|string|max:15',
 			'period' => 'required|string|max:10',
 			'support' => 'required|string|size:3',
@@ -162,10 +237,9 @@ class WeatherBackgroundController extends Controller
 
 	private function handleLocationValues($request) {
 		return [
-			'country' => $request->country ?: null,
-			'province' => $request->province ?: null,
-			'city' => $request->city ?: null,
-			'selection' => 'WEATHER',
+			'country' => $request->country ?: 'CA',
+			'province' => $request->province ?: '--',
+			'city' => $request->city ?: '-'
 		];
 	}
 }
