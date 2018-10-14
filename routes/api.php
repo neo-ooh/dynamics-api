@@ -36,11 +36,6 @@ Route::group(['prefix' => "dynamics", "middleware" => "UserTokenVerification"], 
 	Route::group(['prefix' => "weather"], function () {
 		//////////////
 		// Backgrounds
-		// Single backgrounds CRUD
-		Route::model('background', 'App\WeatherBackground');
-		Route::resource("backgrounds", "WeatherBackgroundController")->only([
-			'index', 'show', 'store', 'destroy'
-		]);
 
 		// Backgrounds cities list
 		Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities")->name("backgrounds.cities");
@@ -48,6 +43,11 @@ Route::group(['prefix' => "dynamics", "middleware" => "UserTokenVerification"], 
 		// Background selection method
 		Route::post("backgrounds/selection", "WeatherBackgroundController@setSelectionMethod")->name("backgrounds.selection");
 
+		// Single backgrounds CRUD
+		Route::model('background', 'App\WeatherBackground');
+		Route::resource("backgrounds", "WeatherBackgroundController")->only([
+			'index', 'show', 'store', 'destroy'
+		]);
 	});
 });
 
@@ -65,4 +65,5 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");
 	Route::get('national', "WeatherController@national")->name("weather.national");
+	Route::get('backgrounds/{country}/{province}/{city}', function() { redirect()->route('backgrounds.index'); });
 });

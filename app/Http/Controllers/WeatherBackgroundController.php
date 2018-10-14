@@ -7,6 +7,7 @@ use App\WeatherLocation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class WeatherBackgroundController extends Controller
 {
@@ -20,7 +21,6 @@ class WeatherBackgroundController extends Controller
 				->orderBy('city')
 				->groupBy('country', 'province', 'city')
 				->get()
-				->toArray()
 		]);
 	}
 
@@ -62,7 +62,7 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
-			})->with('location')->get();
+			})->get();
 
 		// Get request location informations
 		$locationReqParams = $this->handleLocationValues($request);
@@ -85,7 +85,7 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
-			})->with('location')->get();
+			})->get();
 
 		$backgroundsProvince;
 
@@ -122,7 +122,7 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
-			})->with('location')->get();
+			})->get();
 
 		// Is the city and province are both on WEATHER selection method ?
 		if($locationProvince->selection == $location->selection && $location->selection == 'WEATHER') {
@@ -155,13 +155,13 @@ class WeatherBackgroundController extends Controller
 	public function store(Request $request)
 	{
 		$data = $request->validate([
-			'country' => 'string|string|size:2',
-			'province' => 'string|string|size:2',
-			'city' => 'string|string|max:30',
+			'country' => 'required|string|size:2',
+			'province' => 'required|string|size:2',
+			'city' => 'required|string|max:30',
 			'weather' => 'required|string|max:15',
 			'period' => 'required|string|max:10',
 			'support' => 'required|string|size:3',
-			'background' => 'required|file'
+			'background' => 'required|file|mimes:jpeg'
 		]);
 
 		$locationValues = $this->handleLocationValues($request);
@@ -176,9 +176,9 @@ class WeatherBackgroundController extends Controller
 		$background = WeatherBackground::where('weather', $data['weather'])
 			->where('period', $data['period'])
 			->where('support', $data['support'])
-			->with(['location' => function ($query) use ($location) {
-				$query->where('id', '=', $location->id);
-			}])->first();
+			->whereHas('location', function ($query) use ($location) {
+				$query->where('id', $location->id);
+			})->first();
 
 		// Remove old background
 		if ($background) {
@@ -191,7 +191,7 @@ class WeatherBackgroundController extends Controller
 		$background->weather = $data['weather'];
 		$background->period = $data['period'];
 		$background->support = $data['support'];
-		$background->location = $location;
+		$background->location = $location->id;
 		$background->save();
 
 		$path = Storage::disk('public')->putFileAs(
@@ -200,7 +200,7 @@ class WeatherBackgroundController extends Controller
 
 		return new Response([
 			"success" => true,
-			"background" => $this->show($background)->getOriginalContent(),
+			"background" => WeatherBackground::find($background->id),
 			"path" => asset($path)
 		]);
 	}
