@@ -62,6 +62,8 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
+			})->when($locationCanada->selection === 'RANDOM', function ($query) use ($request) {
+				return $query->where('weather', '-');
 			})->get();
 
 		// Get request location informations
@@ -85,6 +87,8 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
+			})->when($locationProvince->selection === 'RANDOM', function ($query) use ($request) {
+				return $query->where('weather', '-');
 			})->get();
 
 		$backgroundsProvince;
@@ -122,6 +126,8 @@ class WeatherBackgroundController extends Controller
 				return $query->where('period', $request->period);
 			})->when($request->support, function ($query) use ($request) {
 				return $query->where('support', $request->support);
+			})->when($location->selection === 'RANDOM', function ($query) use ($request) {
+				return $query->where('weather', '-');
 			})->get();
 
 		// Is the city and province are both on WEATHER selection method ?
