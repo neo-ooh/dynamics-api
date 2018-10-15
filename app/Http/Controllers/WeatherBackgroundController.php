@@ -179,17 +179,19 @@ class WeatherBackgroundController extends Controller
 		$location = WeatherLocation::firstOrCreate($locationValues);
 
 		// Check if a background for the same parameters exist
-		$background = WeatherBackground::where('weather', $data['weather'])
-			->where('period', $data['period'])
-			->where('support', $data['support'])
-			->whereHas('location', function ($query) use ($location) {
-				$query->where('id', $location->id);
-			})->first();
+		if($data['weather'] !== '-') {
+			$background = WeatherBackground::where('weather', $data['weather'])
+				->where('period', $data['period'])
+				->where('support', $data['support'])
+				->whereHas('location', function ($query) use ($location) {
+					$query->where('id', $location->id);
+				})->first();
 
-		// Remove old background
-		if ($background) {
-			$this->destroy($background);
-			unset($background);
+			// Remove old background
+			if ($background) {
+				$this->destroy($background);
+				unset($background);
+			}
 		}
 
 		// Create the new background
