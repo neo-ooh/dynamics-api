@@ -27,8 +27,6 @@ class CreateWeatherLocationsTable extends Migration
 	    Schema::table('weather_backgrounds', function (Blueprint $table) {
 			$table->dropColumn(['country', 'province', 'city']);
 		    $table->integer('location');
-
-		    $table->unique(['location', 'weather', 'period', 'support']);
 	    });
     }
 

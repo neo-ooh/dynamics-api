@@ -233,6 +233,7 @@ class WeatherBackgroundController extends Controller
 	 */
 	public function destroy(WeatherBackground $weatherBackground)
 	{
+		echo "backgroundID : " . $weatherBackground->id;
 		Storage::disk('public')->delete("backgrounds/" . $weatherBackground->id);
 		$weatherBackground->delete();
 
