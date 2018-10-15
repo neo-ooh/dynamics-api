@@ -34,7 +34,7 @@ class UserTokenVerification
 			return $this->onError("You cannot use this token.");
 		}
 
-		if ($token['updated_at']->getTimestamp() + env('USER_SESSION_RESILIENCE', 900) < time()) {
+		if ($token['updated_at']->getTimestamp() + config('cache.user_session_resilience') < time()) {
 			$token->delete();
 			return $this->onError("This token is outdated.");
 		}

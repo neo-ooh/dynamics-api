@@ -91,4 +91,9 @@ return [
         str_slug(env('APP_NAME', 'laravel'), '_').'_cache'
     ),
 
+
+
+
+	'record_lifespan' => env('RECORD_LIFESPAN', 0),
+	'user_session_resilience' => env('USER_SESSION_RESILIENCE', 0)
 ];

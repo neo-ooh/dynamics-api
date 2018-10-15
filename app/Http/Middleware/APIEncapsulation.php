@@ -25,7 +25,7 @@ class APIEncapsulation
 
 		$formated = [
 			"timestamp" => time(),
-			"refresh" => env('RECORD_LIFESPAN', 0),
+			"refresh" => config('cache.record_lifespan', 0),
 			"content" => $responseJSON,
 			"status" => $response->getStatusCode()
 		];
