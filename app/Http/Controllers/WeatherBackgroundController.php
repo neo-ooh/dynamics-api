@@ -70,7 +70,7 @@ class WeatherBackgroundController extends Controller
 		$locationReqParams = $this->handleLocationValues($request);
 
 		// Is there a province in the request ?
-		if($locationReqParams['province'] == "--") {
+		if($locationReqParams['province'] == "--" || $locationCanada->selection === "RANDOM") {
 			// No province, we are not looking for more backgrounds. Let's stop here
 			return new Response([
 				'location' => $locationCanadaParams,
@@ -110,7 +110,7 @@ class WeatherBackgroundController extends Controller
 		}
 
 		// Is there a city in the request ?
-		if($locationReqParams['city'] == "-") {
+		if($locationReqParams['city'] == "-" || $locationProvince->selection === "RANDOM") {
 			// No city, we are not looking for more backgrounds. Let's stop here
 			return new Response([
 				'location' => $locationProvince,
