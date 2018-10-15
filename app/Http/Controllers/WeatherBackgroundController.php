@@ -189,7 +189,7 @@ class WeatherBackgroundController extends Controller
 
 			// Remove old background
 			if ($background) {
-				$this->destroy($background->id);
+				$this->destroy($background);
 				unset($background);
 			}
 		}
@@ -233,7 +233,9 @@ class WeatherBackgroundController extends Controller
 	 */
 	public function destroy($weatherBackground)
 	{
-		var_dump($weatherBackground);
+		if(is_numeric($weatherBackground))
+			$weatherBackground = WeatherBackground::find($weatherBackground);
+
 		Storage::disk('public')->delete("backgrounds/" . $weatherBackground->id);
 		$weatherBackground->delete();
 
