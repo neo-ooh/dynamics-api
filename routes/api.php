@@ -65,5 +65,6 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");
 	Route::get('national', "WeatherController@national")->name("weather.national");
-	Route::get('backgrounds/{period}/{country}/{province}/{city}', "WeatherBackgroundController@index");
+	Route::get('backgrounds/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");
+	Route::get('backgrounds/{period}/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");
 });
