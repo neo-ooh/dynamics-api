@@ -110,6 +110,9 @@ class KeysController extends Controller
 	 */
 	public function destroy(Key $key)
 	{
-		$key = Key::destroy($key);
+		if(is_numeric($key))
+			$key = Key::find($key);
+
+		$key->delete();
 	}
 }
