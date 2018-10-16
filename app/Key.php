@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Key extends Model
 {
+	public $with = ['dynamics'];
+
     public function authorizations() {
     	return $this->hasMany('App\Authorization', 'key');
     }

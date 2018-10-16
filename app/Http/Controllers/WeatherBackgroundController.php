@@ -45,7 +45,7 @@ class WeatherBackgroundController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$data = $request->validate([
+		$request->validate([
 			'country' => 'string|size:2',
 			'province' => 'string|size:2',
 			'city' => 'string|max:30',

@@ -36,23 +36,25 @@ class KeysController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$data = $request->validate([
+		$request->validate([
 			'name' => 'required|string|min:3|unique:keys',
-			'dynamics' => 'sometimes|array',
+			'dynamics' => 'array',
 			'dynamics.*' => 'integer|distinct|exists:dynamics,id'
 		]);
 
 		$key = new Key();
-		$key->name = $data['name'];
+		$key->name = $request->name;
 		$key->key = bin2hex(random_bytes(32));
 
 		$key->save();
 
-		foreach ($data['dynamics'] as $dynamicID) {
-			$auth = new Authorization();
-			$auth->key = $key->id;
-			$auth->dynamic = $dynamicID;
-			$auth->save();
+		if($request->dynamics) {
+			foreach ($request->dynamics as $dynamicID) {
+				$auth = new Authorization();
+				$auth->key = $key->id;
+				$auth->dynamic = $dynamicID;
+				$auth->save();
+			}
 		}
 
 		return $this->show($key);
@@ -61,7 +63,9 @@ class KeysController extends Controller
 	public function update(Key $key, Request $request)
 	{
 		$data = $request->validate([
-			'name' => 'required|string|min:3'
+			'name' => 'required|string|min:3',
+			'dynamics' => 'array',
+			'dynamics.*' => 'integer|distinct|exists:dynamics,id'
 		]);
 
 		// Check for duplicate name
@@ -78,13 +82,25 @@ class KeysController extends Controller
 						]
 					]
 				], 422);
-			} else {
-				return $this->show($key);
-			} // Same name, do nothing
+			}
 		}
 
 		$key->name = $data['name'];
 		$key->save();
+
+		$dynamics = $request->dynamics ?: [];
+
+		// Delete all authorizations then do them again
+		Authorization::where('key', $key->id)->delete();
+
+		foreach ($request->dynamics as $dynamicID) {
+			$auth = new Authorization();
+			$auth->key = $key->id;
+			$auth->dynamic = $dynamicID;
+			$auth->save();
+		}
+
+		$key->refresh();
 
 		return $this->show($key);
 	}
