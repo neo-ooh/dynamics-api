@@ -19,7 +19,6 @@ class MeteoMediaLinkService
 	const ENDPOINT_OBS = ["id" => "obs", "url" => self::OBS_URL];
 	const ENDPOINT_LNG = ["id" => "lng", "url" => self::LNG_URL];
 
-
 	public function getNow(string ...$params)
 	{
 		return $this->getRecord(self::ENDPOINT_OBS, ...$params);
@@ -41,14 +40,14 @@ class MeteoMediaLinkService
 	 */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
 	{
-		echo "Retrieving record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale;
-		// Start by checking cache for presence
+		\Log::info("Fetching record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
+		// Check cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
 		// Cached record was found, let's return it
 		if ($cachedRecord != null) {
-			\Log::info("Record found in DDB");
+			\Log::info("Record found in DDB was ok.");
 			return $cachedRecord;
 		}
 

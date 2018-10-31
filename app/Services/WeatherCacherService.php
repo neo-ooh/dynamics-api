@@ -44,7 +44,7 @@ class WeatherCacherService
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
-		\Log::info("Record lifespan = ".config('app.api.lifespan'));
+		\Log::info("Record age = ".(time() - $lastUpdate->getTimestamp()));
 		if ($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
 			\Log::info("Record found in DDB but was too old.");
 			$record->delete();

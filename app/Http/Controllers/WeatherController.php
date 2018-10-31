@@ -22,6 +22,23 @@ class WeatherController extends Controller
 		["CA", "MB", "Winnipeg"],
 	];
 
+	const PROVINCES = ["NL", "PE", "NS", "NB", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU"];
+	const PROVINCES_LNG = [
+		"Terre-Neuve-et-Labrador" => "NL",
+		"Île-du-Prince-Édouard" => "PE",
+		"Nouvelle-Écosse" => "NS",
+		"Nouveau-Brunswick" => "NB",
+		"Québec" => "QC",
+		"Ontario" => "ON",
+		"Manitoba" => "MB",
+		"Saskatchewan" => "SK",
+		"Alberta" => "AB",
+		"British Columbia" => "BC",
+		"Yukon" => "YT",
+		"Northwest Territories" => "NT",
+		"Nunavut" => "NU"
+	];
+
 	/**
 	 * Gives the national weather
 	 * @return Response
@@ -49,8 +66,12 @@ class WeatherController extends Controller
 	 */
 	public function now(String $country, String $province, String $city): Response
 	{
-		$link = new MeteoMediaLinkService();
+		$this->sanitizeLocation($country, $province, $city);
+		if(!$country || !$province || !$city)
+			return new Response(null);
 
+		// Request
+		$link = new MeteoMediaLinkService();
 		$locale = Input::get('locale', 'en-CA');
 
 		$now = $link->getNow($locale, $country, $province, $city);
@@ -70,11 +91,17 @@ class WeatherController extends Controller
 	 */
 	public function tomorrow(String $country, String $province, String $city): Response
 	{
-		$link = new MeteoMediaLinkService();
+		$this->sanitizeLocation($country, $province, $city);
+		if(!$country || !$province || !$city)
+			return new Response(null);
 
+		$link = new MeteoMediaLinkService();
 		$locale = Input::get('locale', 'en-CA');
 
 		$longTerm = $link->getNext($locale, $country, $province, $city);
+
+		if($longTerm == null) return new Response(null);
+
 		$forecast = $longTerm["LongTermPeriod"][1];
 		$forecast["Location"] = $longTerm["Location"];
 
@@ -90,13 +117,33 @@ class WeatherController extends Controller
 	 */
 	public function forecast(String $country, String $province, String $city): Response
 	{
-		$link = new MeteoMediaLinkService();
+		$this->sanitizeLocation($country, $province, $city);
+		if(!$country || !$province || !$city)
+			return new Response(null);
 
+		$link = new MeteoMediaLinkService();
 		$locale = Input::get('locale', 'en-CA');
 
 		$forecast = $link->getNext($locale, $country, $province, $city);
-		array_splice($forecast["LongTermPeriod"], 0, 1);
+
+		if($forecast != null)
+			array_splice($forecast["LongTermPeriod"], 0, 1);
 
 		return new Response($forecast);
+	}
+
+	private function sanitizeLocation(String &$country, String &$province, String &$city) {
+		// Check if the location is valid
+		if($country != "CA") $country = null;
+
+		if(!in_array($province, self::PROVINCES)) {
+			if(!array_key_exists($province, self::PROVINCES_LNG))
+				$province = null;
+
+			$province = self::PROVINCES_LNG[$province];
+		}
+
+		// Make sure the city format is valid
+		$city = urldecode($city);
 	}
 }
