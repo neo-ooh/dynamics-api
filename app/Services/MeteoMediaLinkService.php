@@ -41,7 +41,7 @@ class MeteoMediaLinkService
 	 */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
 	{
-		\Log::info("Retrieving record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
+		echo "Retrieving record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale;
 		// Start by checking cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
