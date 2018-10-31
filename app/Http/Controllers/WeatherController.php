@@ -143,10 +143,9 @@ class WeatherController extends Controller
 
 		if(!in_array($province, self::PROVINCES)) {
 			\Log::info("Invalid province : ".$province);
-			if(!array_key_exists($province, self::PROVINCES_LNG))
-				$province = null;
-
-			$province = self::PROVINCES_LNG[$province];
+			if(array_key_exists($province, self::PROVINCES_LNG)) {
+				$province = self::PROVINCES_LNG[$province];
+			}
 		}
 
 		// Make sure the city format is valid
