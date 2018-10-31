@@ -22,23 +22,6 @@ class WeatherController extends Controller
 		["CA", "MB", "Winnipeg"],
 	];
 
-	const PROVINCES = ["NL", "PE", "NS", "NB", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU"];
-	const PROVINCES_LNG = [
-		"Terre-Neuve-et-Labrador" => "NL",
-		"Île-du-Prince-Édouard" => "PE",
-		"Nouvelle-Écosse" => "NS",
-		"Nouveau-Brunswick" => "NB",
-		"Québec" => "QC",
-		"Ontario" => "ON",
-		"Manitoba" => "MB",
-		"Saskatchewan" => "SK",
-		"Alberta" => "AB",
-		"British Columbia" => "BC",
-		"Yukon" => "YT",
-		"Northwest Territories" => "NT",
-		"Nunavut" => "NU"
-	];
-
 	/**
 	 * Gives the national weather
 	 * @return Response
@@ -132,6 +115,28 @@ class WeatherController extends Controller
 		return new Response($forecast);
 	}
 
+
+	const PROVINCES = ["NL", "PE", "NS", "NB", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU"];
+	const PROVINCES_LNG = [
+		"Terre-Neuve-et-Labrador" => "NL",
+		"Île-du-Prince-Édouard" => "PE",
+		"Nouvelle-Écosse" => "NS",
+		"Nouveau-Brunswick" => "NB",
+		"Québec" => "QC",
+		"Ontario" => "ON",
+		"Manitoba" => "MB",
+		"Saskatchewan" => "SK",
+		"Alberta" => "AB",
+		"British Columbia" => "BC",
+		"Yukon" => "YT",
+		"Northwest Territories" => "NT",
+		"Nunavut" => "NU"
+	];
+
+	const CITIES = [
+		"Ville de Québec" => "Québec"
+	];
+
 	private function sanitizeLocation(String &$country, String &$province, String &$city) {
 		// Check if the location is valid
 		if($country != "CA") $country = null;
@@ -144,6 +149,8 @@ class WeatherController extends Controller
 		}
 
 		// Make sure the city format is valid
-		$city = urldecode($city);
+		$city = str_replace(".", "", urldecode($city));
+		if(array_key_exists($city, self::CITIES))
+			$city = self::CITIES[$city];
 	}
 }
