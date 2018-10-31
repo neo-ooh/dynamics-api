@@ -36,6 +36,7 @@ class WeatherCacherService
 
 		// No record found, stop here
 		if (count($records) == 0) {
+			\Log::info("Requested record does not exist in the DDB");
 			return null;
 		}
 
@@ -43,7 +44,9 @@ class WeatherCacherService
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
+		\Log::info("Record lifespan = ".config('app.api.lifespan'));
 		if ($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
+			\Log::info("Record found in DDB but was too old.");
 			$record->delete();
 			return null;
 		}

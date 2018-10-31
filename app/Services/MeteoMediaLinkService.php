@@ -36,18 +36,23 @@ class MeteoMediaLinkService
 	 * @param string $country
 	 * @param string $province
 	 * @param string $city
-	 * @return The|mixed|void
+	 * @return mixed
+	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
 	{
+		\Log::info("Retrieving record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
 		// Start by checking cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
 		// Cached record was found, let's return it
 		if ($cachedRecord != null) {
+			\Log::info("Record found in DDB");
 			return $cachedRecord;
 		}
+
+		\Log::info("Fetching new record from API");
 
 		// No cached record, let's retrieve a new one
 		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
@@ -57,8 +62,8 @@ class MeteoMediaLinkService
 
 		// Error
 		if ($res->getStatusCode() != 200) {
-			return;
-		} //TODO DO SOMETHING TO HANDLE ERRORS
+			return null;
+		}
 
 		// Here's our response
 		$response = $res->getBody()->getContents();
