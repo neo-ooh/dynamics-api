@@ -134,7 +134,8 @@ class WeatherController extends Controller
 	];
 
 	const CITIES = [
-		"Ville de Québec" => "Québec"
+		"Ville de Québec" => "Québec",
+		"Boulevard Laurier" => "Québec"
 	];
 
 	private function sanitizeLocation(String &$country, String &$province, String &$city) {
