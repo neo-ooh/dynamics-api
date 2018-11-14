@@ -23,7 +23,7 @@ class APIEncapsulation
 		if(array_key_exists('content', $responseJSON))
 			$responseJSON = $responseJSON['content'];
 
-		$factor = rand(90, 110) / 100
+		$factor = rand(90, 110) / 100;
 
 		$formated = [
 			"timestamp" => time(),
