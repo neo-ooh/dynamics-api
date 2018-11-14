@@ -23,9 +23,11 @@ class APIEncapsulation
 		if(array_key_exists('content', $responseJSON))
 			$responseJSON = $responseJSON['content'];
 
+		$factor = rand(90, 110) / 100
+
 		$formated = [
 			"timestamp" => time(),
-			"refresh" => config('cache.record_lifespan', 0),
+			"refresh" => config('cache.record_lifespan', 0) * $factor,
 			"content" => $responseJSON,
 			"status" => $response->getStatusCode()
 		];
