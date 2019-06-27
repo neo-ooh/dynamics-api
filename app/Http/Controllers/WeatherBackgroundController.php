@@ -108,10 +108,19 @@ class WeatherBackgroundController extends Controller
             // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
             // A higher location ID means a more precise location
             foreach ($allBackgrounds as $aBckg) {
+                $foundEquivalent = false;
+
                 foreach($periodBackgrounds as $bckgKey => $pBckg) {
+                    if($pBckg['weather'] == $aBckg['weather']))
+                        $foundEquivalent = true;
+
                     if($pBckg['weather'] == $aBckg['weather'] && $pBckg['location']['id'] < $aBckg['location']['id']) {
                         $periodBackgrounds[$bckgKey] = $aBckg;
                     }
+                }
+
+                if(!$foundEquivalent) {
+                    array_push($periodBackgrounds, $aBckg);
                 }
             }
 
