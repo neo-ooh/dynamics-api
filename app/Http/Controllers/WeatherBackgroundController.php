@@ -69,7 +69,7 @@ class WeatherBackgroundController extends Controller
 		// Get request location informations
 		$locationReqParams = $this->handleLocationValues($request);
 
-		// Is there a province in the request ?
+		// If there is no province or the country is set to random, stop here
 		if($locationReqParams['province'] == "--" || $locationCanada->selection === "RANDOM") {
 			// No province, we are not looking for more backgrounds. Let's stop here
 			return new Response([
@@ -90,8 +90,6 @@ class WeatherBackgroundController extends Controller
 			})->when($locationProvince->selection === 'RANDOM', function ($query) use ($request) {
 				return $query->where('weather', '-');
 			})->get();
-
-		$backgroundsProvince;
 
 		// Is the province and canada are both on WEATHER selection method ?
 		if($locationCanada->selection == $locationProvince->selection && $locationProvince->selection == 'WEATHER') {
