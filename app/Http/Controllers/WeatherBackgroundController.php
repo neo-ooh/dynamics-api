@@ -85,6 +85,11 @@ class WeatherBackgroundController extends Controller
             }
         }
 
+        $locationsID = [];
+        foreach ($locations as $location) {
+            array_push($locationsID, $location->id);
+        }
+
         $location = $locations->last();
 
         if($isRandom) {
@@ -101,11 +106,11 @@ class WeatherBackgroundController extends Controller
         }
 
         // Get the backgrounds for the current location for all periods
-        $allBackgrounds = WeatherBackground::listByParameters($locations, $request->support, 'ALL')->get()->toArray();
+        $allBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, 'ALL')->get()->toArray();
 
         if($request->period != 'ALL') {
             // Get the background for the requested period
-            $periodBackgrounds = WeatherBackground::listByParameters($locations, $request->support, $request->period)->get()->toArray();
+            $periodBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, $request->period)->get()->toArray();
 
             // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
             // A higher location ID means a more precise location
