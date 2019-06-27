@@ -97,6 +97,7 @@ class WeatherBackgroundController extends Controller
             $backgrounds = WeatherBackground::where('location', $randomLocation->id)
                 ->where('period', $request->period)
                 ->where('support', $request->support)
+                ->where('weather', '-')
                 ->get();
 
             return new Response([
