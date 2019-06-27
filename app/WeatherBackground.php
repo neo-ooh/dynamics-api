@@ -17,4 +17,19 @@ class WeatherBackground extends Model
     public function getPathAttribute() {
     	return Storage::url('backgrounds/'.$this->id);
     }
+
+    static public function listByParameters(array $locations, $support, $period) {
+        return self::from('weather_backgrounds as a')
+            ->select('*')
+            ->leftJoin('weather_backgrounds as b', function($join) {
+                $join->on('a.weather', '=', 'b.weather');
+                $join->on('a.period', '=', 'b.period');
+                $join->on('a.support', '=', 'b.support');
+                $join->on('a.location', '<', 'b.location');
+            })
+            ->where('a.support', $support)
+            ->where('a.period', $period)
+            ->whereIn('a.location', $locations)
+            ->whereNull('b.location');
+    }
 }

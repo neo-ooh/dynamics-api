@@ -53,101 +53,76 @@ class WeatherBackgroundController extends Controller
 			'support' => 'string|size:3',
 		]);
 
-		// Start by getting the canadians backgrounds
-		$locationCanadaParams = ['country' => 'CA', 'province' => '--', 'city' => '-'];
-		$locationCanada = WeatherLocation::firstOrCreate($locationCanadaParams, array_merge($locationCanadaParams, ['selection' => 'WEATHER']));
+		// Start by getting the locations (country, province if specified, and city if specified)
 
-		$backgroundsCanada = WeatherBackground::where('location', $locationCanada->id)
-			->when($request->period, function ($query) use ($request) {
-				return $query->where('period', $request->period);
-			})->when($request->support, function ($query) use ($request) {
-				return $query->where('support', $request->support);
-			})->when($locationCanada->selection === 'RANDOM', function ($query) use ($request) {
-				return $query->where('weather', '-');
-			})->get();
+        $locationParams = [
+            'country' => $request->country ?: 'CA',
+            'province' => $request->province ?: '--',
+            'city' => $request->city ?: '-'
+        ];
 
-		// Get request location informations
-		$locationReqParams = $this->handleLocationValues($request);
+        // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
+        WeatherLocation::firstOrCreate(array('country' => $locationParams['country'],
+                                             'province' => $locationParams['province'],
+                                             'city' => $locationParams['city']));
 
-		// If there is no province or the country is set to random, stop here
-		if($locationReqParams['province'] == "--" || $locationCanada->selection === "RANDOM") {
-			// No province, we are not looking for more backgrounds. Let's stop here
-			return new Response([
-				'location' => $locationCanadaParams,
-				'selection' => $locationCanada->selection,
-				'backgrounds' => $backgroundsCanada]);
-		}
+        // Get the locations
+        $locations = WeatherLocation::where('country', $locationParams['country'])
+            ->whereIn('province', array('--', $locationParams['province']))
+            ->whereIn('city', array('-', $locationParams['city']))
+            ->orderBy('id')
+            ->get();
 
-		// There is a province, let's get its backgrounds
-		$locationProvinceParams = ['country' => 'CA', 'province' => $locationReqParams['province'], 'city' => '-'];
-		$locationProvince = WeatherLocation::firstOrCreate($locationProvinceParams, array_merge($locationProvinceParams, ['selection' => 'WEATHER']));
+        $isRandom = false;
+        $randomLocation = -1;
 
-		$backgroundsProvince = WeatherBackground::where('location', $locationProvince->id)
-			->when($request->period, function ($query) use ($request) {
-				return $query->where('period', $request->period);
-			})->when($request->support, function ($query) use ($request) {
-				return $query->where('support', $request->support);
-			})->when($locationProvince->selection === 'RANDOM', function ($query) use ($request) {
-				return $query->where('weather', '-');
-			})->get();
+        // Check if there is a random switch on
+        foreach ($locations as $location) {
+            if($location->selection == "RANDOM") {
+                $isRandom = true;
+                $randomLocation = $location;
+                break;
+            }
+        }
 
-		// Is the province and canada are both on WEATHER selection method ?
-		if($locationCanada->selection == $locationProvince->selection && $locationProvince->selection == 'WEATHER') {
-			// Yes, let's merge the two sets
-			$providedBackgrounds = [];
-			foreach($backgroundsProvince as $background) {
-				array_push($providedBackgrounds, $background->weather);
-			}
+        if($isRandom) {
+            // Select all the random backgrounds for the specific location
+            $backgrounds = WeatherBackground::where('location', $randomLocation->id)
+                ->where('period', $request->period)
+                ->where('support', $request->support)
+                ->get();
 
-			foreach($backgroundsCanada as $background) {
-				if(!in_array($background->weather, $providedBackgrounds)) {
-					$backgroundsProvince->push($background);
-					array_push($providedBackgrounds, $background->weather);
-				}
-			}
-		}
+            return new Response([
+                'location' => $location,
+                'selection' => $location->selection,
+                'backgrounds' => $backgrounds]);
+        }
 
-		// Is there a city in the request ?
-		if($locationReqParams['city'] == "-" || $locationProvince->selection === "RANDOM") {
-			// No city, we are not looking for more backgrounds. Let's stop here
-			return new Response([
-				'location' => $locationProvince,
-				'selection' => $locationProvince->selection,
-				'backgrounds' => $backgroundsProvince]);
-		}
+        // Get the backgrounds for the current location for all periods
+        $allBackgrounds = WeatherBackground::listByParameters($locations, $request->support, 'ALL')->get()->toArray();
 
-		//There is a city, let's get it's backgrounds
-		$location = WeatherLocation::firstOrCreate($locationReqParams, array_merge($locationReqParams, ['selection' => 'WEATHER']));
+        if($request->period != 'ALL') {
+            // Get the background for the requested period
+            $periodBackgrounds = WeatherBackground::listByParameters($locations, $request->support, $request->period)->get()->toArray();
 
-		$backgroundsLocation = WeatherBackground::where('location', $location->id)
-			->when($request->period, function ($query) use ($request) {
-				return $query->where('period', $request->period);
-			})->when($request->support, function ($query) use ($request) {
-				return $query->where('support', $request->support);
-			})->when($location->selection === 'RANDOM', function ($query) use ($request) {
-				return $query->where('weather', '-');
-			})->get();
+            // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
+            // A higher location ID means a more precise location
+            foreach ($allBackgrounds as $aBckg) {
+                foreach($periodBackgrounds as $bckgKey => $pBckg) {
+                    if($pBckg['weather'] == $aBckg['weather'] && $pBckg['location']['id'] < $aBckg['location']['id']) {
+                        $periodBackgrounds[$bckgKey] = $aBckg;
+                    }
+                }
+            }
 
-		// Is the city and province are both on WEATHER selection method ?
-		if($locationProvince->selection == $location->selection && $location->selection == 'WEATHER') {
-			// Yes, let's merge the two sets
-			$providedBackgrounds = [];
-			foreach($backgroundsLocation as $background) {
-				array_push($providedBackgrounds, $background->weather);
-			}
+            // replace the allBackgrounds variable
+            $allBackgrounds = $periodBackgrounds;
+        }
 
-			foreach($backgroundsProvince as $background) {
-				if(!in_array($background->weather, $providedBackgrounds)) {
-					$backgroundsLocation->push($background);
-					array_push($providedBackgrounds, $background->weather);
-				}
-			}
-		}
-
-		return new Response([
+        return new Response([
 			'location' => $location,
 			'selection' => $location->selection,
-			'backgrounds' => $backgroundsLocation]);
+			'backgrounds' => $allBackgrounds]);
 	}
 
 	/**
