@@ -121,7 +121,7 @@ class WeatherBackgroundController extends Controller
                     if($pBckg->weather == $aBckg->weather)
                         $foundEquivalent = true;
 
-                    if($pBckg->weather == $aBckg->weather && $pBckg->location->id < $aBckg->location->id) {
+                    if($pBckg->weather == $aBckg->weather && $pBckg->location < $aBckg->location) {
                         $periodBackgrounds[$bckgKey] = $aBckg;
                     }
                 }
