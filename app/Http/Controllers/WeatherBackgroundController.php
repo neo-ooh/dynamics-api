@@ -106,11 +106,11 @@ class WeatherBackgroundController extends Controller
         }
 
         // Get the backgrounds for the current location for all periods
-        $allBackgrounds = collect(WeatherBackground::listByParameters($locationsID, $request->support, 'ALL')->get())->toArray();
+        $allBackgrounds = collect(WeatherBackground::listByParameters($locationsID, $request->support, 'ALL')->get())->map(function($x){ return (array) $x; })->toArray();
 
         if($request->period != 'ALL') {
             // Get the background for the requested period
-            $periodBackgrounds = collect(WeatherBackground::listByParameters($locationsID, $request->support, $request->period)->get())->toArray();
+            $periodBackgrounds = collect(WeatherBackground::listByParameters($locationsID, $request->support, $request->period)->get())->map(function($x){ return (array) $x; })->toArray();
 
             // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
             // A higher location ID means a more precise location
