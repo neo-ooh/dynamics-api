@@ -106,27 +106,27 @@ class WeatherBackgroundController extends Controller
         }
 
         // Get the backgrounds for the current location for all periods
-        $allBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, 'ALL')->get();
+        $allBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, 'ALL');
 
         if($request->period != 'ALL') {
             // Get the background for the requested period
-            $periodBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, $request->period)->get();
+            $periodBackgrounds = WeatherBackground::listByParameters($locationsID, $request->support, $request->period);
 
             // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
             // A higher location ID means a more precise location
             foreach ($allBackgrounds as $aBckg) {
                 $foundEquivalent = false;
 
-                foreach($periodBackgrounds as $bckgKey => $pBckg) {
-                    if($pBckg->weather == $aBckg->weather)
+                foreach ($periodBackgrounds as $bckgKey => $pBckg) {
+                    if ($pBckg->weather == $aBckg->weather)
                         $foundEquivalent = true;
 
-                    if($pBckg->weather == $aBckg->weather && $pBckg->location < $aBckg->location) {
+                    if ($pBckg->weather == $aBckg->weather && $pBckg->location < $aBckg->location) {
                         $periodBackgrounds[$bckgKey] = $aBckg;
                     }
                 }
 
-                if(!$foundEquivalent) {
+                if (!$foundEquivalent) {
                     array_push($periodBackgrounds, $aBckg);
                 }
             }

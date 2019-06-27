@@ -20,7 +20,7 @@ class WeatherBackground extends Model
     }
 
     static public function listByParameters($locations, $support, $period) {
-        return DB::table('weather_backgrounds as a')
+        return self::hydrate(DB::table('weather_backgrounds as a')
             ->select('a.id as id',
                 'a.weather as weather',
                 'a.period as period',
@@ -37,6 +37,7 @@ class WeatherBackground extends Model
             ->where('a.support', $support)
             ->where('a.period', $period)
             ->whereIn('a.location', $locations)
-            ->whereNull('b.location');
+            ->whereNull('b.location')
+            ->get());
     }
 }
