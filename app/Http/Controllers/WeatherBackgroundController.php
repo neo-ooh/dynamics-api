@@ -111,15 +111,13 @@ class WeatherBackgroundController extends Controller
                 $foundEquivalent = false;
 
                 foreach($periodBackgrounds as $bckgKey => $pBckg) {
-                    if($pBckg['weather'] == $aBckg['weather']))
+                    if($pBckg['weather'] == $aBckg['weather'])
                         $foundEquivalent = true;
 
                     if($pBckg['weather'] == $aBckg['weather'] && $pBckg['location']['id'] < $aBckg['location']['id']) {
                         $periodBackgrounds[$bckgKey] = $aBckg;
                     }
                 }
-
-                echo "equivalence : ".$foundEquivalent;
 
                 if(!$foundEquivalent) {
                     array_push($periodBackgrounds, $aBckg);
