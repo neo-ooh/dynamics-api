@@ -38,6 +38,6 @@ class WeatherBackground extends Model
             ->where('a.period', $period)
             ->whereIn('a.location', $locations)
             ->whereNull('b.location')
-            ->get()->toArray())->with('location');
+            ->get()->toArray());
     }
 }
