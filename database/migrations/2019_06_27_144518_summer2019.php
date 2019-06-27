@@ -16,6 +16,7 @@ class Summer2019 extends Migration
         //
         Schema::table('weather_locations', function (Blueprint $table) {
             $table->string('selection', 10)->default('WEATHER')->change();
+            $table->dateTime('revert_date')->nullable();
         });
     }
 

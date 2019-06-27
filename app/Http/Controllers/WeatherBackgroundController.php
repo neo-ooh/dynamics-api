@@ -152,31 +152,20 @@ class WeatherBackgroundController extends Controller
 	public function store(Request $request)
 	{
 		$data = $request->validate([
-			'country' => 'required|string|size:2',
-			'province' => 'required|string|size:2',
-			'city' => 'required|string|max:30',
+			'location' => 'required|int|max:11',
 			'weather' => 'required|string|max:15',
 			'period' => 'required|string|max:10',
 			'support' => 'required|string|size:3',
 			'background' => 'required|file|mimes:jpeg'
 		]);
 
-		$locationValues = $this->handleLocationValues($request);
-
-		$locationValues = array_filter($locationValues, function($value) {
-			return $value !== null;
-		});
-
-		$location = WeatherLocation::firstOrCreate($locationValues);
-
 		// Check if a background for the same parameters exist
 		if($data['weather'] !== '-') {
 			$background = WeatherBackground::where('weather', $data['weather'])
 				->where('period', $data['period'])
 				->where('support', $data['support'])
-				->whereHas('location', function ($query) use ($location) {
-					$query->where('id', $location->id);
-				})->first();
+				->where('location', $data['location'])
+				->first();
 
 			// Remove old background
 			if ($background) {
@@ -190,7 +179,7 @@ class WeatherBackgroundController extends Controller
 		$background->weather = $data['weather'];
 		$background->period = $data['period'];
 		$background->support = $data['support'];
-		$background->location = $location->id;
+		$background->location = $data['location'];
 		$background->save();
 
 		$path = Storage::disk('public')->putFileAs(
