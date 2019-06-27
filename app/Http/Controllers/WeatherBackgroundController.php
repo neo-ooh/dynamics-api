@@ -103,32 +103,32 @@ class WeatherBackgroundController extends Controller
         // Get the backgrounds for the current location for all periods
         $allBackgrounds = WeatherBackground::listByParameters($locations, $request->support, 'ALL')->get()->toArray();
 
-//        if($request->period != 'ALL') {
-//            // Get the background for the requested period
-//            $periodBackgrounds = WeatherBackground::listByParameters($locations, $request->support, $request->period)->get()->toArray();
-//
-//            // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
-//            // A higher location ID means a more precise location
-//            foreach ($allBackgrounds as $aBckg) {
-//                $foundEquivalent = false;
-//
-//                foreach($periodBackgrounds as $bckgKey => $pBckg) {
-//                    if($pBckg['weather'] == $aBckg['weather'])
-//                        $foundEquivalent = true;
-//
-//                    if($pBckg['weather'] == $aBckg['weather'] && $pBckg['location']['id'] < $aBckg['location']['id']) {
-//                        $periodBackgrounds[$bckgKey] = $aBckg;
-//                    }
-//                }
-//
-//                if(!$foundEquivalent) {
-//                    array_push($periodBackgrounds, $aBckg);
-//                }
-//            }
-//
-//            // replace the allBackgrounds variable
-//            $allBackgrounds = $periodBackgrounds;
-//        }
+        if($request->period != 'ALL') {
+            // Get the background for the requested period
+            $periodBackgrounds = WeatherBackground::listByParameters($locations, $request->support, $request->period)->get()->toArray();
+
+            // Merge the backgrounds for 'ALL' periods with the backgrounds for the specified period if needed
+            // A higher location ID means a more precise location
+            foreach ($allBackgrounds as $aBckg) {
+                $foundEquivalent = false;
+
+                foreach($periodBackgrounds as $bckgKey => $pBckg) {
+                    if($pBckg['weather'] == $aBckg['weather'])
+                        $foundEquivalent = true;
+
+                    if($pBckg['weather'] == $aBckg['weather'] && $pBckg['location']['id'] < $aBckg['location']['id']) {
+                        $periodBackgrounds[$bckgKey] = $aBckg;
+                    }
+                }
+
+                if(!$foundEquivalent) {
+                    array_push($periodBackgrounds, $aBckg);
+                }
+            }
+
+            // replace the allBackgrounds variable
+            $allBackgrounds = $periodBackgrounds;
+        }
 
         return new Response([
 			'location' => $location,
