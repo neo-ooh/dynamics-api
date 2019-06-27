@@ -119,6 +119,8 @@ class WeatherBackgroundController extends Controller
                     }
                 }
 
+                echo "equivalence : ".$foundEquivalent;
+
                 if(!$foundEquivalent) {
                     array_push($periodBackgrounds, $aBckg);
                 }
