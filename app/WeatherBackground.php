@@ -20,7 +20,7 @@ class WeatherBackground extends Model
 
     static public function listByParameters($locations, $support, $period) {
         return self::from('weather_backgrounds as a')
-            ->select('*')
+            ->select('a.id as id, a.weather as weather')
             ->leftJoin('weather_backgrounds as b', function($join) {
                 $join->on('a.weather', '=', 'b.weather');
                 $join->on('a.period', '=', 'b.period');
