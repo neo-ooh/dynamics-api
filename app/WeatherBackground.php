@@ -18,7 +18,7 @@ class WeatherBackground extends Model
     	return Storage::url('backgrounds/'.$this->id);
     }
 
-    static public function listByParameters(array $locations, $support, $period) {
+    static public function listByParameters($locations, $support, $period) {
         return self::from('weather_backgrounds as a')
             ->select('*')
             ->leftJoin('weather_backgrounds as b', function($join) {
