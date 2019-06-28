@@ -83,6 +83,16 @@ class WeatherBackgroundController extends Controller
         // Check if there is a random switch on
         foreach ($locations as $location) {
             if($location->selection == "RANDOM") {
+
+                // Check if the revert date is passed
+                if($location->revert_date < time()) {
+                    // This location should be reverted to WEATHER
+                    $location->selection = "WEATHER";
+                    $location->save();
+
+                    continue;
+                }
+
                 $isRandom = true;
                 $randomLocation = $location;
                 break;
