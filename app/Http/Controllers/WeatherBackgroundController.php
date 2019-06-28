@@ -109,7 +109,7 @@ class WeatherBackgroundController extends Controller
         if($isRandom) {
             // Select all the random backgrounds for the specific location
             $backgrounds = WeatherBackground::where('location', $randomLocation->id)
-                ->where('period', $request->period)
+                ->where('period', 'ALL')
                 ->where('support', $request->support)
                 ->where('weather', '-')
                 ->get();
