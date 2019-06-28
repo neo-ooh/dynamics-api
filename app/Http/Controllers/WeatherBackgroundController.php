@@ -25,16 +25,20 @@ class WeatherBackgroundController extends Controller
 	}
 
 	public function setSelectionMethod(Request $request) {
-		$data = $request->validate([
+		$request->validate([
 			'country' => 'nullable|string|size:2',
 			'province' => 'nullable|string|size:2',
 			'city' => 'nullable|string|max:30',
 			'selection' => 'required|string|max:10',
+            'revertDate' => 'nullable|int|max:11'
 		]);
 
 		$locationValues = $this->handleLocationValues($request);
 
-		return new Response(WeatherLocation::UpdateOrCreate($locationValues, ['selection' => $data['selection']]));
+		return new Response(WeatherLocation::UpdateOrCreate(
+		    $locationValues,
+            ['selection' => $request->selection,
+             'revert_date' => $request->revertDate]));
 	}
 
 	/**
