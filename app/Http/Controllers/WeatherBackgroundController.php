@@ -115,8 +115,8 @@ class WeatherBackgroundController extends Controller
                 ->get();
 
             return new Response([
-                'location' => $location,
-                'selection' => $location->selection,
+                'location' => $randomLocation,
+                'selection' => $randomLocation->selection,
                 'backgrounds' => $backgrounds]);
         }
 
