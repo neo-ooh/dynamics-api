@@ -30,7 +30,7 @@ class WeatherBackgroundController extends Controller
 			'province' => 'nullable|string|size:2',
 			'city' => 'nullable|string|max:30',
 			'selection' => 'required|string|max:10',
-            'revertDate' => 'nullable|int|max:11'
+            'revertDate' => 'nullable|int|digits_between:1,11'
 		]);
 
 		$locationValues = $this->handleLocationValues($request);
