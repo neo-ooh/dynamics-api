@@ -65,7 +65,7 @@ class WeatherBackgroundController extends Controller
             'city' => $request->city ?: '-'
         ];
 
-        // We do a SELECT ON EMPTY INSERT with the given location to ensure its presence in the ddb
+        // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
         WeatherLocation::firstOrCreate(array('country' => $locationParams['country'],
                                              'province' => $locationParams['province'],
                                              'city' => $locationParams['city']));
@@ -151,16 +151,7 @@ class WeatherBackgroundController extends Controller
         }
 
         return new Response([
-
-			'location' => [
-			    'id' => 2,
-                'country' => "CA",
-                'province' => "AB",
-                "city" => "-",
-                "selection" => "WEATHER",
-                "created_at" => "2018-10-14 19:15:19",
-                "updated_at" => "2018-10-14 19:15:19"
-            ],
+			'location' => $location,
 			'selection' => $location->selection,
 			'backgrounds' => $allBackgrounds]);
 	}
