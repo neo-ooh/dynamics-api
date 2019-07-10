@@ -166,7 +166,7 @@ class WeatherBackgroundController extends Controller
 	public function store(Request $request)
 	{
 		$data = $request->validate([
-			'location' => 'required|int|max:11',
+			'location' => 'required|int',
 			'weather' => 'required|string|max:15',
 			'period' => 'required|string|max:10',
 			'support' => 'required|string|size:3',
