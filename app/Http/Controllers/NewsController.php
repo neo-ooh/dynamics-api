@@ -38,7 +38,7 @@ class NewsController extends Controller
             // Parse each article, insert/update it in the database and copy its image if it exist and isn't already stored
             foreach ($cpArticles as $article) {
                 // Parse the xml file
-                $articleXML = simplexml_load_file($cpStorage->get($article));
+                $articleXML = simplexml_load_string($cpStorage->get($article));
 
                 $articleInfos = [
                     'id' => $articleXML->xpath('//doc-id/@id-string'),
