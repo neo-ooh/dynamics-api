@@ -9,6 +9,6 @@ class NewsCategory extends Model
     protected $table = "news_categories";
 
     public function subjects() {
-        return $this->hasMany('App\NewsSubject');
+        return $this->hasMany('App\NewsSubject', 'category');
     }
 }
