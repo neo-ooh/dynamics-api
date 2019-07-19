@@ -54,7 +54,7 @@ class NewsController extends Controller
                 ];
 
                 // Parse and reformat the date
-                $articleInfos['date'] = DateTime::createFromFormat('c', $articleInfos['date'])->format('Y-m-d G:i:s');
+                $articleInfos['date'] = date('Y-m-d G:i:s', strtotime($articleInfos['date']));
 
                 // Select the image if there is multiple ones, and check its availability
                 if(count($articleInfos['media']) > 0) {
