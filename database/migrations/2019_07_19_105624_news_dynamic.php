@@ -21,6 +21,7 @@ class NewsDynamic extends Migration
             $table->increments('id');
             $table->string('name', 45);
             $table->string('locale', 5);
+            $table->timestamps();
         });
 
         Schema::create('news_subjects', function (Blueprint $table) {
@@ -29,6 +30,7 @@ class NewsDynamic extends Migration
             $table->string('label', 64);
             $table->string('locale', 5);
             $table->integer('category');
+            $table->timestamps();
         });
 
         Schema::create('news_records', function (Blueprint $table) {
@@ -39,6 +41,7 @@ class NewsDynamic extends Migration
             $table->string('headline', 512);
             $table->timestamp('date');
             $table->string('media', 64)->nullable();
+            $table->timestamps();
         });
 
         Schema::table('news_records', function(Blueprint $table) {
@@ -61,7 +64,7 @@ class NewsDynamic extends Migration
                 ->onDelete('cascade');
         });
 
-        DB::table('dynamics')->insert(['slug' => 'news', 'name' => 'News']);
+//        DB::table('dynamics')->insert(['slug' => 'news', 'name' => 'News']);
 
         DB::table('news_categories')->insert([
             ['name' => 'National News', 'locale' => 'en'],
@@ -103,6 +106,7 @@ class NewsDynamic extends Migration
      */
     public function down()
     {
+
         Schema::rename('weather_records', 'records');
 
         Schema::dropIfExists('news_records');

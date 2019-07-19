@@ -27,6 +27,8 @@ class Summer2019 extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('weather_locations', function (Blueprint $table) {
+            $table->dropColumn('revert_date');
+        });
     }
 }
