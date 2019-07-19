@@ -48,6 +48,8 @@ class NewsController extends Controller
                     'date' => (string)$articleXML->xpath('//story.date/@norm')[0],
                     'headline' => (string)$articleXML->xpath('//hl1')[0],
                     'media' => $articleXML->xpath('//media-reference/@source'),
+                    'subject' => $subject->id,
+                    'locale' => $subject->locale,
                 ];
 
                 // Select the image if there is multiple ones, and check its availability

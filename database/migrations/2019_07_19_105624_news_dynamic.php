@@ -64,7 +64,7 @@ class NewsDynamic extends Migration
                 ->onDelete('cascade');
         });
 
-//        DB::table('dynamics')->insert(['slug' => 'news', 'name' => 'News']);
+        DB::table('dynamics')->insert(['slug' => 'news', 'name' => 'News']);
 
         DB::table('news_categories')->insert([
             ['name' => 'National News', 'locale' => 'en'],
