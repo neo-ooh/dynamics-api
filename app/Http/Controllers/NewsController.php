@@ -87,7 +87,23 @@ class NewsController extends Controller
                 // Register that this record is live
                 array_push($insertedRecords, $record->id);
 
-                return new Response([$articleInfos, $record, Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media'])]);
+//                return new Response([$articleInfos, $record, Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media'])]);
+            }
+
+            // All articles on the FTP have now been treated. We now need to address articles that are no longer here
+            foreach ($subjectRecords as $record) {
+                if(in_array($record->id, $insertedRecords)) {
+                    // Record is OK
+                    continue;
+                }
+
+                // Record is no longer on the FTP, remove it.
+                // If it as a media, remove it also
+                if ($record->media != null && Storage::disk('public')->exists(self::MEDIA_FOLDER.$record->media)) {
+                    Storage::disk('public')->delete(self::MEDIA_FOLDER.$record->media);
+                }
+
+                $record->delete();
             }
         }
     }
