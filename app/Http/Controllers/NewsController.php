@@ -112,6 +112,6 @@ class NewsController extends Controller
     }
 
     public function records(NewsCategory $category) : Response {
-        return new Response($category->subjects());
+        return new Response($category->subjects()->get());
     }
 }
