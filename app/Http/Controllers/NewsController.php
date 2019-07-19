@@ -36,12 +36,12 @@ class NewsController extends Controller
             foreach ($cpArticles as $article) {
                 // Parse the xml file
                 $articleInfos = XmlParser::extract($cpStorage->get($article))->parse([
-                    'headline' => ['uses' => 'body.body.head.hedline.hl1'],
-                    'date' => ['uses' => 'body.body.head.dateline.story.date::norm'],
-                    'media' => ['uses' => 'body.body.content.block.media.media-reference::source'],
+                    'headline' => ['uses' => 'nitf.body.body.head.hedline.hl1'],
+                    'date' => ['uses' => 'nitf.body.body.head.dateline.story.date::norm'],
+                    'media' => ['uses' => 'nitf.body.body.content.block.media.media-reference::source'],
                 ]);
 
-                return new Response([$articleInfos, $subjectRecords, $cpFiles, $cpArticles]);
+                return new Response([$articleInfos, $subjectRecords]);
             }
         }
     }
