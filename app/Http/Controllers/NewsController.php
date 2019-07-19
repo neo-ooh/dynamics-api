@@ -52,6 +52,9 @@ class NewsController extends Controller
                     'locale' => $subject->locale,
                 ];
 
+                // Parse and reformat the date
+                $articleInfos['date'] = DateTime::createFromFormat('c', $articleInfos['date'])->format('Y-m-d G:i:s');
+
                 // Select the image if there is multiple ones, and check its availability
                 if(count($articleInfos['media']) > 0) {
                     $mediaName = $subject->slug.'/'.((string)$articleInfos['media'][0]);
