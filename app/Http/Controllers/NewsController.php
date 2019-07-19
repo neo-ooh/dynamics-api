@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\NewsSubject;
+use function count;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Nathanmac\Utilities\Parser\Parser;
@@ -47,7 +48,7 @@ class NewsController extends Controller
                     'media' => $articleXML->xpath('//media-reference/@source'),
                 ];
 
-                return new Response([$articleInfos, $article, $subjectRecords, $articleInfos['media']->count()]);
+                return new Response([$articleInfos, $article, $subjectRecords, count($articleInfos['media'])]);
             }
         }
     }
