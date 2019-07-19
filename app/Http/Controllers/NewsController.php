@@ -86,8 +86,6 @@ class NewsController extends Controller
 
                 // Register that this record is live
                 array_push($insertedRecords, $record->id);
-
-//                return new Response([$articleInfos, $record, Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media'])]);
             }
 
             // All articles on the FTP have now been treated. We now need to address articles that are no longer here
@@ -106,5 +104,7 @@ class NewsController extends Controller
                 $record->delete();
             }
         }
+
+        return new Response(['done']);
     }
 }
