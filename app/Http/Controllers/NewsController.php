@@ -107,7 +107,7 @@ class NewsController extends Controller
         }
     }
 
-    public function categories(): Response {
+    public function categories() : Response {
         return new Response(NewsCategory::all());
     }
 }
