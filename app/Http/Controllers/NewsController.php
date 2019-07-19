@@ -41,13 +41,13 @@ class NewsController extends Controller
                 $articleXML = simplexml_load_string($cpStorage->get($article));
 
                 $articleInfos = [
-                    'id' => $articleXML->xpath('//doc-id/@id-string')[0][0][0][0],
-                    'date' => $articleXML->xpath('//story.date/@norm')[0][0][0][0],
-                    'headline' => $articleXML->xpath('//hl1')[0][0],
-                    'media' => $articleXML->xpath('//media-reference/@source')[0][0],
+                    'id' => $articleXML->xpath('//doc-id/@id-string')[0][0][0],
+                    'date' => $articleXML->xpath('//story.date/@norm')[0][0][0],
+                    'headline' => $articleXML->xpath('//hl1')[0],
+                    'media' => $articleXML->xpath('//media-reference/@source')[0],
                 ];
 
-                return new Response([$articleInfos, $article, $subjectRecords, empty($article['media']), $articleInfos['id']]);
+                return new Response([$articleInfos, $article, $subjectRecords, empty($article['media']), gettype($articleInfos['id'])]);
             }
         }
     }
