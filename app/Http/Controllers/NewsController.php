@@ -110,4 +110,8 @@ class NewsController extends Controller
     public function categories() : Response {
         return new Response(NewsCategory::all());
     }
+
+    public function records(NewsCategory $category) : Response {
+        return $category->subjects()->records();
+    }
 }
