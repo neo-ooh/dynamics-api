@@ -48,7 +48,13 @@ class NewsController extends Controller
                     'media' => $articleXML->xpath('//media-reference/@source'),
                 ];
 
-                return new Response([$articleInfos, $article, $subjectRecords, count($articleInfos['media'])]);
+                if(count($articleInfos['media']) > 0) {
+                    $articleInfos['media'] = (string)$articleInfos['media'][0]
+                } else {
+                    $articleInfos['media'] = null;
+                }
+
+                return new Response([$articleInfos, $article, $subjectRecords]);
             }
         }
     }
