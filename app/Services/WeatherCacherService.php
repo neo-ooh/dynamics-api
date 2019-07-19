@@ -9,7 +9,7 @@
 namespace App\Services;
 
 
-use App\Record;
+use App\WeatherRecord;
 
 class WeatherCacherService
 {
@@ -25,7 +25,7 @@ class WeatherCacherService
 	 */
 	public function get(string $endpoint, string $country, string $province, string $city, string $locale)
 	{
-		$records = Record::where([
+		$records = WeatherRecord::where([
 			"endpoint" => $endpoint,
 			"country" => $country,
 			"province" => $province,
@@ -44,14 +44,14 @@ class WeatherCacherService
 		$lastUpdate = new \DateTime($record->updated_at);
 
 		// record too old, let's remove it
-		\Log::info("Record age = ".(time() - $lastUpdate->getTimestamp()));
+		\Log::info("WeatherRecord age = ".(time() - $lastUpdate->getTimestamp()));
 		if ($lastUpdate->getTimestamp() + config('app.api.lifespan') < time()) {
-			\Log::info("Record found in DDB but was too old.");
+			\Log::info("WeatherRecord found in DDB but was too old.");
 			$record->delete();
 			return null;
 		}
 
-		// Record OK, let's return it
+		// WeatherRecord OK, let's return it
 		return json_decode($record->content, true);
 	}
 
@@ -63,7 +63,7 @@ class WeatherCacherService
 		string $locale,
 		string $content
 	) {
-		$record = new Record();
+		$record = new WeatherRecord();
 		$record->endpoint = $endpoint;
 		$record->country = $country;
 		$record->province = $province;
