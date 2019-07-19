@@ -48,8 +48,10 @@ class NewsController extends Controller
                     'media' => $articleXML->xpath('//media-reference/@source'),
                 ];
 
+                // Select the image if there is multiple ones, and check its availability
                 if(count($articleInfos['media']) > 0) {
-                    $articleInfos['media'] = (string)$articleInfos['media'][0];
+                    $mediaName = (string)$articleInfos['media'][0];
+                    $articleInfos['media'] = in_array($mediaName, $cpFiles) ? $mediaName : null;
                 } else {
                     $articleInfos['media'] = null;
                 }
