@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\NewsRecord;
 use App\NewsSubject;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
