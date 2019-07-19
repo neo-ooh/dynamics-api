@@ -40,7 +40,7 @@ class NewsController extends Controller
                     'media' => ['uses' => 'body.body.content.block.media.media-reference::source'],
                 ]);
 
-                return new Response($articleInfos);
+                return new Response([$articleInfos, $subjectRecords, $cpFiles, $cpArticles]);
             }
         }
     }
