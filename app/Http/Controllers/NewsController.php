@@ -6,6 +6,7 @@ use App\NewsSubject;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Nathanmac\Utilities\Parser\Parser;
+use function simplexml_load_file;
 
 
 class NewsController extends Controller
@@ -37,37 +38,45 @@ class NewsController extends Controller
             // Parse each article, insert/update it in the database and copy its image if it exist and isn't already stored
             foreach ($cpArticles as $article) {
                 // Parse the xml file
-                $parser->xml($cpStorage->get($article));
-                $articleInfos = $parser->mask([
-                    'nitf' => [
-                        'head' => [
-                            'docdata' => [
-                                'doc-id' => [
-                                    '@id-string' => '*',
-                                ],
-                                'date.issue' => [
-                                    '@norm' => '*',
-                                ],
-                            ],
-                        ],
-                        'body' => [
-                            'body.head' => [
-                                'hedline' => [
-                                    'hl1' => '*',
-                                ],
-                            ],
-                            'body\.content' => [
-                                'block' => [
-                                    'media.*' => [
-                                        'media-reference' => [
-                                            '@source' => '*',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ]);
+                $articleXML = simplexml_load_file($cpStorage->get($article));
+
+                $articleInfos = [
+                    'id' => $articleXML->xpath('//doc-id/@id-string'),
+                    'date' => $articleXML->xpath('//story.date/@norm'),
+                    'headline' => $articleXML->xpath('//hl1'),
+                    'media' => $articleXML->xpath('//media-reference/@source'),
+                ];
+
+//                $articleInfos = $parser->mask([
+//                    'nitf' => [
+//                        'head' => [
+//                            'docdata' => [
+//                                'doc-id' => [
+//                                    '@id-string' => '*',
+//                                ],
+//                                'date.issue' => [
+//                                    '@norm' => '*',
+//                                ],
+//                            ],
+//                        ],
+//                        'body' => [
+//                            'body.head' => [
+//                                'hedline' => [
+//                                    'hl1' => '*',
+//                                ],
+//                            ],
+//                            'body\.content' => [
+//                                'block' => [
+//                                    'media.*' => [
+//                                        'media-reference' => [
+//                                            '@source' => '*',
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
+//                    ],
+//                ]);
 
                 return new Response([$articleInfos, $article, $subjectRecords]);
             }
