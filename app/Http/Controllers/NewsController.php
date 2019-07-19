@@ -39,27 +39,29 @@ class NewsController extends Controller
                 // Parse the xml file
                 $parser->xml($cpStorage->get($article));
                 $articleInfos = $parser->mask([
-                    'head' => [
-                        'docdata' => [
-                            'doc-id' => [
-                                '@id-string' => '*',
-                            ],
-                            'date.issue' => [
-                                '@norm' => '*',
-                            ],
-                        ],
-                    ],
-                    'body' => [
-                        'body\.head' => [
-                            'hedline' => [
-                                'hl1' => '*',
+                    'nitf' => [
+                        'head' => [
+                            'docdata' => [
+                                'doc-id' => [
+                                    '@id-string' => '*',
+                                ],
+                                'date.issue' => [
+                                    '@norm' => '*',
+                                ],
                             ],
                         ],
-                        'body\.content' => [
-                            'block' => [
-                                'media.*' => [
-                                    'media-reference' => [
-                                        '@source' => '*',
+                        'body' => [
+                            'body.head' => [
+                                'hedline' => [
+                                    'hl1' => '*',
+                                ],
+                            ],
+                            'body\.content' => [
+                                'block' => [
+                                    'media.*' => [
+                                        'media-reference' => [
+                                            '@source' => '*',
+                                        ],
                                     ],
                                 ],
                             ],
