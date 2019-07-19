@@ -15,6 +15,8 @@ use function simplexml_load_file;
 
 class NewsController extends Controller
 {
+    const MEDIA_FOLDER = 'news/medias/';
+
     /**
      * Refresh will gather records from the Canadian Press and update the database accordingly.
      * New records will be inserted in the DDB, older ones will be removed, as well as their corresponding media if present
@@ -32,6 +34,7 @@ class NewsController extends Controller
         foreach($newsSubjects as $subject) {
             // Get all the records for this subject
             $subjectRecords = $subject->records();
+            $insertedRecords = [];
 
             // Get all the files in the canadian-press subject directory
             $cpFiles = $cpStorage->files($subject->slug);
@@ -69,6 +72,20 @@ class NewsController extends Controller
                     ['cp_id' => $articleInfos['cp_id']],
                     $articleInfos
                 );
+
+                // If there's an image and it doesn't already exist, we copy it
+                if($articleInfos['media']) {
+                    if (!Storage::disk('public')->exists(self::MEDIA_FOLDER.$articleInfos['media'])) {
+                        // The file doesn't exist, let's copy it from the FTP
+                        Storage::disk('public')->writeStream(
+                            self::MEDIA_FOLDER.$articleInfos['media'],
+                            $cpStorage::readStream($articleInfos['media'])
+                        );
+                    }
+                }
+
+                // Register that this record is live
+                array_push($insertedRecords, $record->id);
 
                 return new Response([$articleInfos, $record]);
             }
