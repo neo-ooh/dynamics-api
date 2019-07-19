@@ -37,14 +37,29 @@ class NewsController extends Controller
             // Parse each article, insert/update it in the database and copy its image if it exist and isn't already stored
             foreach ($cpArticles as $article) {
                 // Parse the xml file
-                $articleXML = $parser->xml($cpStorage->get($article));
-                $articleInfos = [
-                    'cp_id' => $articleXML['head']['docdata']['doc-id']['@id-string'],
-                    'date' => $articleXML['head']['docdata']['date.issue']['@norm'],
-                    'date' => $articleXML['body']['body.head']['hedline']['hl1'],
-                    'media' => $articleXML['body']['body.content']['block'][0]['media']['media-reference']['@source'],
-                ];
-
+                $parser->xml($cpStorage->get($article));
+                $articleInfos = $parser->mask([
+                    'head' => [
+                        'docdata' => [
+                            'doc-id' => '@id-string',
+                            'date.issue' => '@norm',
+                        ],
+                    ],
+                    'body' => [
+                        'body.head' => [
+                            'hedline' => [
+                                'hl1' => '*',
+                            ],
+                        ],
+                        'body.content' => [
+                            'block' => [
+                                'media.*' => [
+                                    'media-reference' => '@source'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
 
                 return new Response([$articleInfos, $article, $subjectRecords]);
             }
