@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\NewsSubject;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Orchestra\Parser\Xml\Facade as XmlParser;
+
 
 class NewsController extends Controller
 {
