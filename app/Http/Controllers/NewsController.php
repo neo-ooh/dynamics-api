@@ -6,6 +6,7 @@ use App\NewsSubject;
 use function count;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use function in_array;
 use Nathanmac\Utilities\Parser\Parser;
 use function simplexml_load_file;
 
@@ -30,7 +31,7 @@ class NewsController extends Controller
             // Get all the records for this subject
             $subjectRecords = $subject->records();
 
-            // Get all the files in the canadian-press subejct directory
+            // Get all the files in the canadian-press subject directory
             $cpFiles = $cpStorage->files($subject->slug);
 
             // Filter to only get articles (XML Files)
@@ -51,12 +52,12 @@ class NewsController extends Controller
                 // Select the image if there is multiple ones, and check its availability
                 if(count($articleInfos['media']) > 0) {
                     $mediaName = (string)$articleInfos['media'][0];
-                    $articleInfos['media'] = in_array($mediaName, $cpFiles) ? $mediaName : null;
+                    $articleInfos['media'] = in_array($subject->slug.'/'.$mediaName, $cpFiles) ? $mediaName : null;
                 } else {
                     $articleInfos['media'] = null;
                 }
 
-                return new Response([$articleInfos, $article, $subjectRecords]);
+                return new Response([$articleInfos, $article, $subjectRecords, $article]);
             }
         }
     }
