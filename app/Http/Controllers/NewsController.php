@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\NewsCategory;
 use App\NewsRecord;
 use App\NewsSubject;
 use function count;
@@ -104,7 +105,9 @@ class NewsController extends Controller
                 $record->delete();
             }
         }
+    }
 
-        return new Response(['done']);
+    public function categories(): Response {
+        return new Response(NewsCategory::all());
     }
 }

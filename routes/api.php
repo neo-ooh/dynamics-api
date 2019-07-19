@@ -74,4 +74,5 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
  */
 Route::group(['prefix' => 'news', 'middleware' => ['APIKeyVerification:news']], function () {
     Route::get('refresh', "NewsController@refresh")->name("news.refresh");
+    Route::get('refresh', "NewsController@categories")->name("news.categories");
 });
