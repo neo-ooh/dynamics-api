@@ -62,7 +62,10 @@ class NewsController extends Controller
 
                 // Insert/Update the article in the DDB
                 $record = NewsRecord::updateOrCreate(
-                    ['cp_id' => $articleInfos['cp_id']],
+                    [
+                        'cp_id' => $articleInfos['cp_id'],
+                        'subject' => $articleInfos['subject']
+                    ],
                     $articleInfos
                 );
 
