@@ -41,24 +41,30 @@ class NewsController extends Controller
                 $articleInfos = $parser->mask([
                     'head' => [
                         'docdata' => [
-                            'doc-id' => '@id-string',
-                            'date.issue' => '@norm',
+                            'doc-id' => [
+                                '@id-string' => '*',
+                            ],
+                            'date.issue' => [
+                                '@norm' => '*',
+                            ],
                         ],
                     ],
                     'body' => [
-                        'body.head' => [
+                        'body\.head' => [
                             'hedline' => [
                                 'hl1' => '*',
                             ],
                         ],
-                        'body.content' => [
+                        'body\.content' => [
                             'block' => [
                                 'media.*' => [
-                                    'media-reference' => '@source'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'media-reference' => [
+                                        '@source' => '*',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ]);
 
                 return new Response([$articleInfos, $article, $subjectRecords]);
