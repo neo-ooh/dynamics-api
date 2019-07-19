@@ -40,7 +40,7 @@ class NewsDynamic extends Migration
             $table->string('locale', 5);
             $table->string('headline', 512);
             $table->timestamp('date');
-            $table->string('media', 64)->nullable();
+            $table->string('media', 256)->nullable();
             $table->timestamps();
         });
 
