@@ -79,7 +79,7 @@ class NewsController extends Controller
                         // The file doesn't exist, let's copy it from the FTP
                         Storage::disk('public')->writeStream(
                             self::MEDIA_FOLDER.$articleInfos['media'],
-                            $cpStorage::readStream($articleInfos['media'])
+                            $cpStorage->readStream($articleInfos['media'])
                         );
                     }
                 }
@@ -87,7 +87,7 @@ class NewsController extends Controller
                 // Register that this record is live
                 array_push($insertedRecords, $record->id);
 
-                return new Response([$articleInfos, $record]);
+                return new Response([$articleInfos, $record, Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media'])]);
             }
         }
     }
