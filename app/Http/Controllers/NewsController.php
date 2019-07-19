@@ -49,7 +49,7 @@ class NewsController extends Controller
                 ];
 
                 if(count($articleInfos['media']) > 0) {
-                    $articleInfos['media'] = (string)$articleInfos['media'][0]
+                    $articleInfos['media'] = (string)$articleInfos['media'][0];
                 } else {
                     $articleInfos['media'] = null;
                 }
