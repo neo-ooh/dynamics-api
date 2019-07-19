@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Weather API'),
+    'name' => env('APP_NAME', 'Dynamics API'),
 
     /*
     |--------------------------------------------------------------------------
@@ -160,6 +160,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        /*
+         * Third Parties Providers...
+         */
+        Orchestra\Parser\XmlServiceProvider::class,
+
     ],
 
     /*
@@ -208,6 +214,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        /*
+         * Third Parties Aliases...
+         */
+        'XmlParser' => Orchestra\Parser\Xml\Facade::class,
 
     ],
 

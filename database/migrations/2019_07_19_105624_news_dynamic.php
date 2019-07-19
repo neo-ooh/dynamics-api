@@ -33,11 +33,16 @@ class NewsDynamic extends Migration
 
         Schema::create('news_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('cp_id', 64);
             $table->integer('subject');
             $table->string('locale', 5);
             $table->string('headline', 512);
             $table->timestamp('date');
             $table->string('media', 64)->nullable();
+        });
+
+        Schema::table('news_records', function(Blueprint $table) {
+           $table->unique('cp_id');
         });
 
         Schema::table('news_subjects' , function (Blueprint $table) {

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class WeatherLocation extends Model
 {
 	protected $fillable = array('country', 'province', 'city', 'selection', 'revert_date');
-    public function backgrounds() {
+
+	public function backgrounds() {
     	return $this->hasMany('App\WeatherBackground', 'location');
     }
 }

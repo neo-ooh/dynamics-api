@@ -68,3 +68,10 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
 	Route::get('backgrounds/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");
 	Route::get('backgrounds/{period}/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");
 });
+
+/**
+ * News dynamic routes
+ */
+Route::group(['prefix' => 'news', 'middleware' => ['APIKeyVerification:news']], function () {
+    Route::get('refresh', "NewsController@now")->name("news.refresh");
+});
