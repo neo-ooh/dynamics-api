@@ -43,7 +43,7 @@ class NewsController extends Controller
                 $articleInfos = [
                     'id' => (string)$articleXML->xpath('//doc-id/@id-string')[0][0],
                     'date' => (string)$articleXML->xpath('//story.date/@norm')[0][0],
-                    'headline' => (string)$articleXML->xpath('//hl1'),
+                    'headline' => (string)$articleXML->xpath('//hl1')[0],
                     'media' => $articleXML->xpath('//media-reference/@sourceeee'),
                 ];
 
