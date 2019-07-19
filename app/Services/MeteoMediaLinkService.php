@@ -47,7 +47,7 @@ class MeteoMediaLinkService
 
 		// Cached record was found, let's return it
 		if ($cachedRecord != null) {
-			\Log::info("Record found in DDB was ok.");
+			\Log::info("WeatherRecord found in DDB was ok.");
 			return $cachedRecord;
 		}
 
