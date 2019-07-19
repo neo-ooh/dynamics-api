@@ -9,6 +9,6 @@ class NewsSubject extends Model
     protected $table = "news_subjects";
 
     public function records() {
-        return $this->hasMany('App\NewsRecord');
+        return $this->hasMany('App\NewsRecord', 'subject');
     }
 }
