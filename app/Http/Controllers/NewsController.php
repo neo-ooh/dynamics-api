@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\NewsSubject;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Orchestra\Parser\Xml\Facade as XmlParser;
+use Nathanmac\Utilities\Parser\Parser;
 
 
 class NewsController extends Controller
@@ -21,6 +21,8 @@ class NewsController extends Controller
         // Get the Canadian Press Storage
         $cpStorage = Storage::disk('canadian-press');
 
+        $parser = new Parser();
+
         // Refresh the list of article for each subject
         foreach($newsSubjects as $subject) {
             // Get all the records for this subject
@@ -35,14 +37,10 @@ class NewsController extends Controller
             // Parse each article, insert/update it in the database and copy its image if it exist and isn't already stored
             foreach ($cpArticles as $article) {
                 // Parse the xml file
-                $articleInfos = XmlParser::extract($cpStorage->get($article))->parse([
-//                    'headline' => ['uses' => 'nitf.body.body.head.hedline.hl1'],
-                    'headline' => ['uses' => 'nitf.head.title'],
-                    'date' => ['uses' => 'nitf.body.body.head.dateline.story.date::norm'],
-                    'media' => ['uses' => 'nitf.body.body.content.block.media.media-reference::source'],
-                ]);
+                $articleXML = $cpStorage->get($article);
+                $articleInfos = $parser->xml($articleXML);
 
-                return new Response([$articleInfos, $subjectRecords]);
+                return new Response([$articleInfos, $article, $subjectRecords]);
             }
         }
     }

@@ -164,7 +164,7 @@ return [
         /*
          * Third Parties Providers...
          */
-        Orchestra\Parser\XmlServiceProvider::class,
+        Nathanmac\Utilities\Parser\ParserServiceProvider::class,
 
     ],
 
@@ -218,7 +218,7 @@ return [
         /*
          * Third Parties Aliases...
          */
-        'XmlParser' => Orchestra\Parser\Xml\Facade::class,
+        'Parser' => Nathanmac\Utilities\Parser\Facades\Parser::class,
 
     ],
 
