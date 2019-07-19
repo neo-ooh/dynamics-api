@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\NewsRecord;
 use App\NewsSubject;
 use function count;
 use Illuminate\Http\Response;
@@ -43,7 +44,7 @@ class NewsController extends Controller
                 $articleXML = simplexml_load_string($cpStorage->get($article));
 
                 $articleInfos = [
-                    'id' => (string)$articleXML->xpath('//doc-id/@id-string')[0],
+                    'cp_id' => (string)$articleXML->xpath('//doc-id/@id-string')[0],
                     'date' => (string)$articleXML->xpath('//story.date/@norm')[0],
                     'headline' => (string)$articleXML->xpath('//hl1')[0],
                     'media' => $articleXML->xpath('//media-reference/@source'),
@@ -51,13 +52,19 @@ class NewsController extends Controller
 
                 // Select the image if there is multiple ones, and check its availability
                 if(count($articleInfos['media']) > 0) {
-                    $mediaName = (string)$articleInfos['media'][0];
-                    $articleInfos['media'] = in_array($subject->slug.'/'.$mediaName, $cpFiles) ? $mediaName : null;
+                    $mediaName = $subject->slug.'/'.((string)$articleInfos['media'][0]);
+                    $articleInfos['media'] = in_array($mediaName, $cpFiles) ? $mediaName : null;
                 } else {
                     $articleInfos['media'] = null;
                 }
 
-                return new Response([$articleInfos, $article, $subjectRecords, $article]);
+                // Insert/Update the article in the DDB
+                $record = NewsRecord::updateOrCreate(
+                    ['cp_id' => $articleInfos['cp_id']],
+                    $articleInfos
+                );
+
+                return new Response([$articleInfos, $record]);
             }
         }
     }
