@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,37 +17,51 @@ use Illuminate\Http\Request;
  */
 
 // AUTH
+
 Route::group(['prefix' => 'auth'], function () {
 	Route::post('login', "AuthController@login")->name("auth.login");
 	Route::get('logout', "AuthController@logout")->name("auth.logout")->middleware("UserTokenVerification");
 });
 
-// The Keys
-Route::model('key', 'App\Key');
-Route::resource('keys', 'KeysController')->only([
-	'index', 'show', 'store', 'update', 'destroy'
-]);
-
 
 // Dynamics
-Route::group(['prefix' => "dynamics", "middleware" => "UserTokenVerification"], function () {
-	//Weather dynamic
-	Route::group(['prefix' => "weather"], function () {
-		//////////////
-		// Backgrounds
+Route::group(["middleware" => "UserTokenVerification"], function () {
+    // The Keys
+    Route::model('key', 'App\Key');
+    Route::resource('keys', 'KeysController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
 
-		// Backgrounds cities list
-		Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities")->name("backgrounds.cities");
+    // ////////////////
+    // DYNAMICS ------
+    Route::group(['prefix' => "dynamics"], function () {
+        //Weather dynamic
+        Route::group(['prefix' => "weather"], function () {
+            //////////////
+            // Backgrounds
 
-		// Background selection method
-		Route::post("backgrounds/selection", "WeatherBackgroundController@setSelectionMethod")->name("backgrounds.selection");
+            // Backgrounds cities list
+            Route::get("backgrounds/cities", "WeatherBackgroundController@registeredCities")->name("weather.backgrounds.cities");
 
-		// Single backgrounds CRUD
-		Route::model('background', 'App\WeatherBackground');
-		Route::resource("backgrounds", "WeatherBackgroundController")->only([
-			'index', 'show', 'store', 'destroy'
-		]);
-	});
+            // Background selection method
+            Route::post("backgrounds/selection", "WeatherBackgroundController@setSelectionMethod")->name("weather.backgrounds.selection");
+
+            // Single backgrounds CRUD
+            Route::model('background', 'App\WeatherBackground');
+            Route::resource("backgrounds", "WeatherBackgroundController")->only([
+                'index', 'show', 'store', 'destroy'
+            ]);
+        });
+
+        // News Dynamic
+        Route::group(['prefix' => "news"], function () {
+            //////////////
+            // Categories
+
+            // Get all the available news categories
+            Route::get('categories', "NewsController@categories")->name("news.categories");
+        });
+    });
 });
 
 
@@ -73,7 +86,12 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
  * News dynamic routes
  */
 Route::group(['prefix' => 'news', 'middleware' => ['APIKeyVerification:news']], function () {
+    // Refresh records — Should only be used for dev/testing, may be remove later on
     Route::get('refresh', "NewsController@refresh")->name("news.refresh");
+
+    // Get all the available news categories
     Route::get('categories', "NewsController@categories")->name("news.categories");
+
+    // Get all the records for the specified category
     Route::get('records/{category}', "NewsController@records")->name("news.records");
 });
