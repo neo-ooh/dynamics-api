@@ -72,8 +72,7 @@ class NewsBackgroundController extends Controller
 		);
 
 		return new Response([
-			"background" => $background,
-//			"background" => NewsBackground::find($background->id),
+			"background" => NewsBackground::find($background->id),
 		]);
 	}
 
