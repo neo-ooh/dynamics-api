@@ -60,6 +60,14 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
 
             // Get all the available news categories
             Route::get('categories', "NewsController@categories")->name("dynamics.news.categories");
+
+            //////////////
+            // Backgrounds
+
+            Route::model('news_background', 'App\NewsBackground');
+            Route::resource("backgrounds", "NewsBackgroundController")->only([
+                'index', 'show', 'store', 'destroy'
+            ]);
         });
     });
 });
