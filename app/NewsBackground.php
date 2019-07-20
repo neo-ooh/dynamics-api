@@ -11,7 +11,7 @@ class NewsBackground extends Model
     protected $appends = array('path');
 
 	public function category() {
-	    return $this->belongsTo('categories', 'id', 'category');
+	    return $this->belongsTo('App\NewsCategories', 'id', 'category');
     }
 
     public function getPathAttribute() {
