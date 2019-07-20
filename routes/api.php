@@ -59,7 +59,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
             // Categories
 
             // Get all the available news categories
-            Route::get('categories', "NewsController@categories")->name("news.categories");
+            Route::get('categories', "NewsController@categories")->name("dynamics.news.categories");
         });
     });
 });
