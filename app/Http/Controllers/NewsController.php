@@ -108,7 +108,7 @@ class NewsController extends Controller
     }
 
     public function categories() : Response {
-        return new Response(NewsCategory::all());
+        return new Response(NewsCategory::all()->sortBy("name"));
     }
 
     public function records(NewsCategory $category) : Response {
