@@ -23,12 +23,12 @@ class NewsBackgroundController extends Controller
 		]);
 
         // Get all the backgrounds for the specified support and locale
-        return new Response([
+        return new Response(
             NewsBackground::where('support', $data['support'])
                           ->where('locale', $data['locale'])
                           ->with('category')
                           ->get()
-        ]);
+        );
 	}
 
     /**
