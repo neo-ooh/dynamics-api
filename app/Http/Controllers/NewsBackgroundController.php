@@ -71,8 +71,10 @@ class NewsBackgroundController extends Controller
 			'news/backgrounds', $request->file('background'), $background->id
 		);
 
+		$background->load('category');
+
 		return new Response([
-			"background" => NewsBackground::find($background->id),
+            "background" => $background,
 		]);
 	}
 
