@@ -40,18 +40,18 @@ class MeteoMediaLinkService
 	 */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
 	{
-		\Log::info("Fetching record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
+//		\Log::info("Fetching record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
 		// Check cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
 		// Cached record was found, let's return it
 		if ($cachedRecord != null) {
-			\Log::info("WeatherRecord found in DDB was ok.");
+//			\Log::info("WeatherRecord found in DDB was ok.");
 			return $cachedRecord;
 		}
 
-		\Log::info("Fetching new record from API");
+//		\Log::info("Fetching new record from API");
 
 		// No cached record, let's retrieve a new one
 		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
