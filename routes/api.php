@@ -65,7 +65,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
             // Backgrounds
 
             Route::model('news_background', 'App\NewsBackground');
-            Route::resource("backgrounds/{support}", "NewsBackgroundController")->only([
+            Route::resource("backgrounds", "NewsBackgroundController")->only([
                 'index', 'show', 'store', 'destroy'
             ]);
         });
@@ -104,5 +104,5 @@ Route::group(['prefix' => 'news', 'middleware' => ['APIKeyVerification:news']], 
     Route::get('records/{category}', "NewsController@records")->name("news.records");
 
     // Get the list of all the backgrounds
-    Route::get('backgrounds', 'NewsBackgroundController@index')->name('news.backgrounds');
+    Route::get('backgrounds/{support}', 'NewsBackgroundController@index')->name('news.backgrounds');
 });
