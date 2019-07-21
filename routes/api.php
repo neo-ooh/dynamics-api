@@ -65,7 +65,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
             // Backgrounds
 
             Route::model('news_background', 'App\NewsBackground');
-            Route::resource("backgrounds", "NewsBackgroundController")->only([
+            Route::resource("backgrounds/{support}", "NewsBackgroundController")->only([
                 'index', 'show', 'store', 'destroy'
             ]);
         });

@@ -9,22 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsBackgroundController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param  \Illuminate\Http\Request $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $support
+     * @return \Illuminate\Http\Response
+     */
+	public function index(Request $request, string $support)
 	{
-        $data = $request->validate([
-			'support' => 'string|required|size:3',
-//			'locale' => 'string|required|max:5',
-		]);
 
         // Get all the backgrounds for the specified support and locale
         return new Response(
-            NewsBackground::where('support', $data['support'])
+            NewsBackground::where('support', $support)
 //                          ->where('locale', $data['locale'])
                           ->with('category')
                           ->get()
