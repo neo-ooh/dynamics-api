@@ -102,4 +102,7 @@ Route::group(['prefix' => 'news', 'middleware' => ['APIKeyVerification:news']], 
 
     // Get all the records for the specified category
     Route::get('records/{category}', "NewsController@records")->name("news.records");
+
+    // Get the list of all the backgrounds
+    Route::get('backgrounds', 'NewsBackgroundController@index')->name('news.backgrounds')
 });
