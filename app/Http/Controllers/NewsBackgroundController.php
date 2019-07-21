@@ -18,14 +18,14 @@ class NewsBackgroundController extends Controller
 	public function index(Request $request)
 	{
         $data = $request->validate([
-			'support' => 'string|size:3',
-			'locale' => 'string|max:5',
+			'support' => 'string|required|size:3',
+//			'locale' => 'string|required|max:5',
 		]);
 
         // Get all the backgrounds for the specified support and locale
         return new Response(
             NewsBackground::where('support', $data['support'])
-                          ->where('locale', $data['locale'])
+//                          ->where('locale', $data['locale'])
                           ->with('category')
                           ->get()
         );
