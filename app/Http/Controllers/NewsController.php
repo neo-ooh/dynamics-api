@@ -6,12 +6,9 @@ use App\NewsCategory;
 use App\NewsRecord;
 use App\NewsSubject;
 use function count;
-use DateTime;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use function in_array;
-use Nathanmac\Utilities\Parser\Parser;
-use function simplexml_load_file;
 
 
 class NewsController extends Controller
@@ -28,8 +25,6 @@ class NewsController extends Controller
 
         // Get the Canadian Press Storage
         $cpStorage = Storage::disk('canadian-press');
-
-        $parser = new Parser();
 
         // Refresh the list of article for each subject
         foreach($newsSubjects as $subject) {
@@ -104,6 +99,8 @@ class NewsController extends Controller
 
                 $record->delete();
             }
+
+            return new Response($subjectRecords);
         }
     }
 
