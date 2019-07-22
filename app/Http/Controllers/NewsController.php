@@ -99,8 +99,6 @@ class NewsController extends Controller
 
                 $record->delete();
             }
-
-            return new Response($subjectRecords);
         }
     }
 
