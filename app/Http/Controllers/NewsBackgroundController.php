@@ -16,17 +16,20 @@ class NewsBackgroundController extends Controller
      * @param string $support
      * @return \Illuminate\Http\Response
      */
-	public function index(Request $request, string $support)
-	{
+    public function index(Request $request)
+    {
+        return $this->indexForSupport($request, $request['support']);
+    }
 
+    public function indexForSupport(Request $request, string $support) {
         // Get all the backgrounds for the specified support and locale
         return new Response(
             NewsBackground::where('support', $support)
 //                          ->where('locale', $data['locale'])
-                          ->with('category')
-                          ->get()
+                ->with('category')
+                ->get()
         );
-	}
+    }
 
     /**
      * Store a newly created resource in storage.
