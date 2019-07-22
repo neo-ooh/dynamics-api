@@ -29,7 +29,7 @@ class NewsController extends Controller
         // Refresh the list of article for each subject
         foreach($newsSubjects as $subject) {
             // Get all the records for this subject
-            $subjectRecords = $subject->records();
+            $subjectRecords = $subject->records()->get();
             $insertedRecords = [];
 
             // Get all the files in the canadian-press subject directory
