@@ -17,6 +17,9 @@ class APIEncapsulation
 	 */
 	public function handle($request, Closure $next)
 	{
+        /**
+         * Illuminate\Http\Response
+         */
 		$response = $next($request);
 		$responseJSON = json_decode($response->content(), true) ?: [];
 
@@ -33,6 +36,7 @@ class APIEncapsulation
 		];
 
 		$response->setContent(json_encode($formated));
+		$response->setMaxAge(config('cache.record_lifespan', 0) * $factor);
 
 		return $response;
 	}
