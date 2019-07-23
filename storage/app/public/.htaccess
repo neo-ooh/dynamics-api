@@ -1,1 +1,2 @@
 Header set Access-Control-Allow-Origin "*"
+Header set Cache-Control  "max-age=3888"
