@@ -6,6 +6,7 @@ use App\NewsCategory;
 use App\NewsRecord;
 use App\NewsSubject;
 use function count;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use function in_array;
@@ -107,6 +108,6 @@ class NewsController extends Controller
     }
 
     public function records(NewsCategory $category) : Response {
-        return new Response($category->subjects()->with('records')->first());
+        return new Response($category->subjects()->with('records')->get());
     }
 }
