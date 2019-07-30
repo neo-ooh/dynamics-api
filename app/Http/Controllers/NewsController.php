@@ -80,7 +80,7 @@ class NewsController extends Controller
                         );
 
 
-                        [$record->mediaWidth, $record->mediaHeight, null, null] = getimagesize(Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media']));
+                        [$record->media_width, $record->media_height, null, null] = getimagesize(Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media']));
                         $record->save();
                     }
                 }
