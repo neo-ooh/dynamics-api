@@ -79,8 +79,10 @@ class NewsController extends Controller
                             $cpStorage->readStream($articleInfos['media'])
                         );
 
-
-                        [$record->media_width, $record->media_height, null, null] = getimagesize(Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media']));
+                        // Get and store the media dimensions
+                        [$width, $height, $a, $b] = getimagesize(Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media']));
+                        $record->media_width = $width;
+                        $record->media_height = $height;
                         $record->save();
                     }
                 }
