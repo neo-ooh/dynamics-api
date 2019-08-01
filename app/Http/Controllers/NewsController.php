@@ -27,6 +27,8 @@ class NewsController extends Controller
         // Get the Canadian Press Storage
         $cpStorage = Storage::disk('canadian-press');
 
+        $parsedArticles = []
+
         // Refresh the list of article for each subject
         foreach($newsSubjects as $subject) {
             // Get all the records for this subject
@@ -89,6 +91,7 @@ class NewsController extends Controller
 
                 // Register that this record is live
                 array_push($insertedRecords, $record->id);
+                array_push($parsedArticles, $article);
             }
 
             // All articles on the FTP have now been treated. We now need to address articles that are no longer here
@@ -107,6 +110,8 @@ class NewsController extends Controller
                 $record->delete();
             }
         }
+
+        return new Response(["parsedAticles" => $parsedArticles]);
     }
 
     public function categories() : Response {
