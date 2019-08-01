@@ -73,20 +73,19 @@ class NewsController extends Controller
                 );
 
                 // If there's an image and it doesn't already exist, we copy it
-                if($articleInfos['media']) {
-                    if (!Storage::disk('public')->exists(self::MEDIA_FOLDER.$articleInfos['media'])) {
-                        // The file doesn't exist, let's copy it from the FTP
-                        Storage::disk('public')->writeStream(
-                            self::MEDIA_FOLDER.$articleInfos['media'],
-                            $cpStorage->readStream($articleInfos['media'])
-                        );
+                if($articleInfos['media'] && !Storage::disk('public')->exists(self::MEDIA_FOLDER.$articleInfos['media'])) {
+                    // The file doesn't exist on our server, let's copy it from the FTP
+                    Storage::disk('public')->writeStream(
+                        self::MEDIA_FOLDER.$articleInfos['media'],
+                        $cpStorage->readStream($articleInfos['media'])
+                    );
 
-                        // Get and store the media dimensions
-                        [$width, $height, $a, $b] = getimagesize(Storage::disk('public')->url(self::MEDIA_FOLDER.$articleInfos['media']));
-                        $record->media_width = $width;
-                        $record->media_height = $height;
-                        $record->save();
-                    }
+                    // Get and store the media dimensions
+                    [$width, $height, $a, $b] = getimagesize(Storage::disk('public')->path(self::MEDIA_FOLDER.$articleInfos['media']));
+                    $record->media_width = $width;
+                    $record->media_height = $height;
+                    $record->save();
+
                 }
 
                 // Register that this record is live
