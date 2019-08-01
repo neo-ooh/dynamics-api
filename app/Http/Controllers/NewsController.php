@@ -27,7 +27,7 @@ class NewsController extends Controller
         // Get the Canadian Press Storage
         $cpStorage = Storage::disk('canadian-press');
 
-        $parsedArticles = []
+        $parsedArticles = [];
 
         // Refresh the list of article for each subject
         foreach($newsSubjects as $subject) {
