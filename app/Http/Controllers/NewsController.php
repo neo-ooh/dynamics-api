@@ -75,7 +75,7 @@ class NewsController extends Controller
                 $record = NewsRecord::updateOrCreate(
                     [
                         'cp_id' => $articleInfos['cp_id'],
-                        'subject' => $articleInfos->subject
+                        'subject' => $articleInfos['subject']
                     ],
                     $articleInfos
                 );

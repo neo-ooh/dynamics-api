@@ -15,7 +15,7 @@ class NewsDynamicRecordsUniquenessUpdate extends Migration
     {
         // Update the unique attribute of the news records
         Schema::table('news_records', function(Blueprint $table) {
-            $table->dropUnique('cp_id');
+            $table->dropUnique('cp_id'); // To update
             $table->unique(['cp_id', 'subject']);
         });
     }
