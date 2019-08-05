@@ -6,6 +6,7 @@ use App\NewsCategory;
 use App\NewsRecord;
 use App\NewsSubject;
 use function count;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -44,8 +45,12 @@ class NewsController extends Controller
             // Parse each article, insert/update it in the database and copy its image if it exist and isn't already stored
             foreach ($cpArticles as $article) {
                 // Parse the xml file
-                $articleXML = simplexml_load_string($cpStorage->get($article));
-
+                try {
+                    $articleXML = simplexml_load_string($cpStorage->get($article));
+                }
+                catch (Exception $exception) {
+                    continue;
+                }
                 $articleInfos = [
                     'cp_id' => (string)$articleXML->xpath('//doc-id/@id-string')[0],
                     'date' => (string)$articleXML->xpath('//story.date/@norm')[0],
@@ -68,7 +73,10 @@ class NewsController extends Controller
 
                 // Insert/Update the article in the DDB
                 $record = NewsRecord::updateOrCreate(
-                    ['cp_id' => $articleInfos['cp_id']],
+                    [
+                        'cp_id' => $articleInfos['cp_id'],
+                        'subject' => $articleInfos->subject
+                    ],
                     $articleInfos
                 );
 
