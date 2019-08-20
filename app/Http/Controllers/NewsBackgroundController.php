@@ -44,7 +44,7 @@ class NewsBackgroundController extends Controller
 			'category' => 'required|int',
 			'support' => 'required|string|size:3',
 			'locale' => 'required|string|max:5',
-			'background' => 'required|file|mimes:jpeg'
+			'background' => 'required|file|mimes:jpeg,png'
 		]);
 
 		// Check if a background for the same parameters exist
