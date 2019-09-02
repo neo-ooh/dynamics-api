@@ -17,7 +17,7 @@ class KeysController extends Controller
 	 */
 	public function index()
 	{
-		return new Response(Key::with('dynamics')->get());
+		return new Response(Key::all());
 	}
 
 	/**
