@@ -18,14 +18,15 @@ class NewsBackgroundController extends Controller
      */
     public function index(Request $request)
     {
-        // Override LED support type to FCL backgrounds
-        $support = $request['support'] == 'LED' ? 'FCL' : $request['support'];
-
-        return $this->indexForSupport($request, $support);
+        return $this->indexForSupport($request, $request['support']);
     }
 
     public function indexForSupport(Request $request, string $support) {
         // Get all the backgrounds for the specified support and locale
+
+        // Override LED support type to FCL backgrounds
+        $support = $support == 'LED' ? 'FCL' : $support;
+
         return new Response(
             NewsBackground::where('support', $support)
 //                          ->where('locale', $data['locale'])
