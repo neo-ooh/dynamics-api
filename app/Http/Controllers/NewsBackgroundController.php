@@ -18,7 +18,10 @@ class NewsBackgroundController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->indexForSupport($request, $request['support']);
+        // Override LED support type to FCL backgrounds
+        $support = $request['support'] == 'LED' ? 'FCL' : $request['support'];
+
+        return $this->indexForSupport($request, $support);
     }
 
     public function indexForSupport(Request $request, string $support) {
