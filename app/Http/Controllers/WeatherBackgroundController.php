@@ -99,8 +99,8 @@ class WeatherBackgroundController extends Controller
         }
 
         $locationsID = [];
-        foreach ($locations as $location) {
-            array_push($locationsID, $location->id);
+        foreach ($locations as $loc) {
+            array_push($locationsID, $loc->id);
         }
 
         $location = $locations->last();
