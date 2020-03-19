@@ -65,9 +65,10 @@ class WeatherBackgroundController extends Controller
         ];
 
         // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
-        WeatherLocation::firstOrCreate(array('country' => $locationParams['country'],
-                                             'province' => $locationParams['province'],
-                                             'city' => $locationParams['city']));
+        WeatherLocation::firstOrCreate(
+            ['country' => $locationParams['country']],
+            ['province' => $locationParams['province']],
+            ['city' => $locationParams['city']]);
 
         // Get the locations
         $locations = WeatherLocation::where('country', $locationParams['country'])
@@ -99,8 +100,8 @@ class WeatherBackgroundController extends Controller
         }
 
         $locationsID = [];
-        foreach ($locations as $location) {
-            array_push($locationsID, $location->id);
+        foreach ($locations as $loc) {
+            array_push($locationsID, $loc->id);
         }
 
         $location = $locations->last();
