@@ -68,7 +68,7 @@ class WeatherCacherService
 	        ['country' => $country],
 	        ['province' => $province],
 	        ['city' => $city],
-	        ['locale' => $locale],
+	        ['locale' => $locale]
         );
 
 		$record->content = $content;
