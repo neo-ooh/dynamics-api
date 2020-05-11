@@ -33,7 +33,7 @@ class MeteoMediaLinkService
 
     public function getHourly(string ...$params)
     {
-        return $this->getRecord(self::ENDPOINT_LNG, ...$params);
+        return $this->getRecord(self::ENDPOINT_HLY, ...$params);
     }
 
 	/**
