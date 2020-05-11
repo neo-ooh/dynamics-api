@@ -67,7 +67,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
             Route::model('news_background', 'App\NewsBackground');
             Route::resource("backgrounds", "NewsBackgroundController")->only([
                 'index', 'show', 'store', 'destroy'
-            ]);
+            ])->names(['news.backgrounds.index', 'news.backgrounds.show', 'news.backgrounds.store', 'news.backgrounds.destroy']);
         });
     });
 });
