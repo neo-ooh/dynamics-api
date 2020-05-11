@@ -14,7 +14,8 @@
         "guzzlehttp/guzzle": "~7.0",
         "laravel/framework": "^7.10",
         "laravel/tinker": "^2.0",
-        "orchestra/parser": "^5.0"
+        "orchestra/parser": "^5.0",
+        "facade/ignition": "^2.0"
     },
     "require-dev": {
         "filp/whoops": "^2.7",
