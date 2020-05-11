@@ -31,7 +31,7 @@ class WeatherController extends Controller
 		$forecasts = [];
 		$link = new MeteoMediaLinkService();
 
-		$locale = Input::get('locale', 'en-CA');
+		$locale = Request('locale', 'en-CA');
 
 		foreach ($this->cities as $city) {
 			array_push($forecasts, $link->getNow($locale, ...$city));
@@ -55,7 +55,7 @@ class WeatherController extends Controller
 
 		// Request
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = Request::input('locale', 'en-CA');
 
 		$now = $link->getNow($locale, $country, $province, $city);
 		$longTerm = $link->getNext($locale, $country, $province, $city)["LongTermPeriod"][0];
@@ -79,7 +79,7 @@ class WeatherController extends Controller
 			return new Response(null);
 
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = Request::input('locale', 'en-CA');
 
 		$longTerm = $link->getNext($locale, $country, $province, $city);
 
@@ -105,7 +105,7 @@ class WeatherController extends Controller
 			return new Response(null);
 
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = Request::input('locale', 'en-CA');
 
 		$forecast = $link->getNext($locale, $country, $province, $city);
 
@@ -129,7 +129,7 @@ class WeatherController extends Controller
             return new Response(null);
 
         $link = new MeteoMediaLinkService();
-        $locale = Input::get('locale', 'en-CA');
+        $locale = Request::input('locale', 'en-CA');
 
         $hourly = $link->getHourly($locale, $country, $province, $city);
 
