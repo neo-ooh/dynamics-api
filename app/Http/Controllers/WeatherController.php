@@ -115,6 +115,27 @@ class WeatherController extends Controller
 		return new Response($forecast);
 	}
 
+    /**
+     * Give the next hours weather forecast for the specified location
+     * @param String $country  CA
+     * @param String $province QC|ON|BC|etc.
+     * @param String $city     Toronto|Montreal|etc.
+     * @return Response
+     */
+    public function hourly(String $country, String $province, String $city): Response
+    {
+        $this->sanitizeLocation($country, $province, $city);
+        if(!$country || !$province || !$city)
+            return new Response(null);
+
+        $link = new MeteoMediaLinkService();
+        $locale = Input::get('locale', 'en-CA');
+
+        $hourly = $link->getHourly($locale, $country, $province, $city);
+
+        return new Response($hourly);
+    }
+
 
 	const PROVINCES = ["NL", "PE", "NS", "NB", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU"];
 	const PROVINCES_LNG = [
