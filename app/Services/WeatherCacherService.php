@@ -63,7 +63,7 @@ class WeatherCacherService
 		string $locale,
 		string $content
 	) {
-	    $record = WeatherRecord::firstOrCreate(
+	    $record = WeatherRecord::updateOrCreate(
 	        ['endpoint' => $endpoint],
 	        ['country' => $country],
 	        ['province' => $province],
