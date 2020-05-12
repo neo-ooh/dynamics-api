@@ -164,7 +164,6 @@ return [
         /*
          * Third Parties Providers...
          */
-        Nathanmac\Utilities\Parser\ParserServiceProvider::class,
 
     ],
 
@@ -218,7 +217,6 @@ return [
         /*
          * Third Parties Aliases...
          */
-        'Parser' => Nathanmac\Utilities\Parser\Facades\Parser::class,
 
     ],
 

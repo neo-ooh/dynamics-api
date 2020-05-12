@@ -64,14 +64,13 @@ class WeatherCacherService
 		string $content
 	) {
 	    $record = WeatherRecord::firstOrNew(
-	        ['endpoint' => $endpoint],
-	        ['country' => $country],
-	        ['province' => $province],
-	        ['city' => $city],
-	        ['locale' => $locale]
-        );
+	        ['endpoint' => $endpoint,
+	        'country' => $country,
+	        'province' => $province,
+	        'city' => $city,
+	        'locale' => $locale]);
 
-		$record->content = $content;
-		$record->save();
+	    $record->content = $content;
+	    $record->save();
 	}
 }

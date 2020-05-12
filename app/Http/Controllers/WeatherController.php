@@ -31,7 +31,7 @@ class WeatherController extends Controller
 		$forecasts = [];
 		$link = new MeteoMediaLinkService();
 
-		$locale = Input::get('locale', 'en-CA');
+		$locale = Request('locale', 'en-CA');
 
 		foreach ($this->cities as $city) {
 			array_push($forecasts, $link->getNow($locale, ...$city));
@@ -42,20 +42,21 @@ class WeatherController extends Controller
 
 	/**
 	 * Give the current weather for the specified city
-	 * @param String $country  CA
-	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city     Toronto|Montreal|etc.
 	 * @return Response
 	 */
-	public function now(String $country, String $province, String $city): Response
+	public function now(Request $request): Response
 	{
+	    $country = $request->country;
+        $province = $request->province;
+        $city = $request->city;
+
 		$this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city)
 			return new Response(null);
 
 		// Request
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = $request->input('locale', 'en-CA');
 
 		$now = $link->getNow($locale, $country, $province, $city);
 		$longTerm = $link->getNext($locale, $country, $province, $city)["LongTermPeriod"][0];
@@ -67,19 +68,21 @@ class WeatherController extends Controller
 
 	/**
 	 * Give the next day weather for the specified location
-	 * @param String $country  CA
-	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city     Toronto|Montreal|etc.
+     * @param Request $request The request
 	 * @return Response
 	 */
-	public function tomorrow(String $country, String $province, String $city): Response
+	public function tomorrow(Request $request): Response
 	{
-		$this->sanitizeLocation($country, $province, $city);
+        $country = $request->country;
+        $province = $request->province;
+        $city = $request->city;
+
+        $this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city)
 			return new Response(null);
 
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = $request->input('locale', 'en-CA');
 
 		$longTerm = $link->getNext($locale, $country, $province, $city);
 
@@ -93,19 +96,21 @@ class WeatherController extends Controller
 
 	/**
 	 * Give the seven days weather for the specified location
-	 * @param String $country  CA
-	 * @param String $province QC|ON|BC|etc.
-	 * @param String $city     Toronto|Montreal|etc.
+     * @param Request $request The request
 	 * @return Response
 	 */
-	public function forecast(String $country, String $province, String $city): Response
+	public function forecast(Request $request): Response
 	{
-		$this->sanitizeLocation($country, $province, $city);
+        $country = $request->country;
+        $province = $request->province;
+        $city = $request->city;
+
+        $this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city)
 			return new Response(null);
 
 		$link = new MeteoMediaLinkService();
-		$locale = Input::get('locale', 'en-CA');
+		$locale = $request->input('locale', 'en-CA');
 
 		$forecast = $link->getNext($locale, $country, $province, $city);
 
@@ -114,6 +119,29 @@ class WeatherController extends Controller
 
 		return new Response($forecast);
 	}
+
+    /**
+     * Give the next hours weather forecast for the specified location
+     * @param Request $request The request
+     * @return Response
+     */
+    public function hourly(Request $request): Response
+    {
+        $country = $request->country;
+        $province = $request->province;
+        $city = $request->city;
+
+        $this->sanitizeLocation($country, $province, $city);
+        if(!$country || !$province || !$city)
+            return new Response(null);
+
+        $link = new MeteoMediaLinkService();
+        $locale = $request->input('locale', 'en-CA');
+
+        $hourly = $link->getHourly($locale, $country, $province, $city);
+
+        return new Response($hourly);
+    }
 
 
 	const PROVINCES = ["NL", "PE", "NS", "NB", "QC", "ON", "MB", "SK", "AB", "BC", "YT", "NT", "NU"];
@@ -135,7 +163,7 @@ class WeatherController extends Controller
 
 	const CITIES = [
 		"Ville de Québec" => "Québec",
-		"Boulevard Laurier" => "Québec"
+		"Boulevard Laurier" => "Québec",
 	];
 
 	private function sanitizeLocation(String &$country, String &$province, String &$city) {
@@ -153,5 +181,8 @@ class WeatherController extends Controller
 		$city = str_replace(".", "", urldecode($city));
 		if(array_key_exists($city, self::CITIES))
 			$city = self::CITIES[$city];
+
+		if($city == "Repentigny")
+		    $province = 'QC';
 	}
 }

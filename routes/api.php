@@ -65,7 +65,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
             // Backgrounds
 
             Route::model('news_background', 'App\NewsBackground');
-            Route::resource("backgrounds", "NewsBackgroundController")->only([
+            Route::resource("backgrounds", "NewsBackgroundController", ['as' => "news.backgrounds."])->only([
                 'index', 'show', 'store', 'destroy'
             ]);
         });
@@ -85,6 +85,7 @@ Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weathe
 	Route::get('now/{country}/{province}/{city}', "WeatherController@now")->name("weather.now");
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");
+    Route::get('hourly/{country}/{province}/{city}', "WeatherController@hourly")->name("weather.hourly");
 	Route::get('national', "WeatherController@national")->name("weather.national");
 	Route::get('backgrounds/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");
 	Route::get('backgrounds/{period}/{support}/{country}/{province}/{city}', "WeatherBackgroundController@index");

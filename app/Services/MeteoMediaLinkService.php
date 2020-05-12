@@ -15,9 +15,11 @@ class MeteoMediaLinkService
 	const METEO_MEDIA_URL = "http://wx.api.pelmorex.com/weather";
 	const OBS_URL = self::METEO_MEDIA_URL . "/Observations";
 	const LNG_URL = self::METEO_MEDIA_URL . "/LongTermForecasts";
+	const HLY_URL = self::METEO_MEDIA_URL . "/HourlyForecasts";
 
 	const ENDPOINT_OBS = ["id" => "obs", "url" => self::OBS_URL];
 	const ENDPOINT_LNG = ["id" => "lng", "url" => self::LNG_URL];
+    const ENDPOINT_HLY = ["id" => "hly", "url" => self::HLY_URL];
 
 	public function getNow(string ...$params)
 	{
@@ -28,6 +30,11 @@ class MeteoMediaLinkService
 	{
 		return $this->getRecord(self::ENDPOINT_LNG, ...$params);
 	}
+
+    public function getHourly(string ...$params)
+    {
+        return $this->getRecord(self::ENDPOINT_HLY, ...$params);
+    }
 
 	/**
 	 * @param        $endpoint

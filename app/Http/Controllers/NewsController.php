@@ -7,7 +7,6 @@ use App\NewsRecord;
 use App\NewsSubject;
 use function count;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use function in_array;
