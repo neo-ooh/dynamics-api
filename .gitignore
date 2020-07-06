@@ -13,3 +13,4 @@ yarn-error.log
 .env
 *.paw
 .DS_Store
+*.mwb

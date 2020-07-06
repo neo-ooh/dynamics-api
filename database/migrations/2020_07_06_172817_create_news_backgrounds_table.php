@@ -1,20 +1,33 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateNewsBackgroundsTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    public $tableName = 'news_backgrounds';
+
+    /**
      * Run the migrations.
+     * @table news_backgrounds
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('news_backgrounds', function (Blueprint $table) {
-            $table->id();
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'MyISAM';
+            $table->increments('id');
+            $table->unsignedInteger('category');
+            $table->string('support', 3);
+            $table->string('locale', 5);
+
+            $table->unique(["category", "support", "locale"], 'news_backgrounds_category_support_locale_unique');
             $table->timestamps();
         });
     }
@@ -26,6 +39,6 @@ class CreateNewsBackgroundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news_backgrounds');
+        Schema::dropIfExists($this->tableName);
     }
 }

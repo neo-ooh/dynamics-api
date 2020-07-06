@@ -1,20 +1,34 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateNewsSubjectsTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    public $tableName = 'news_subjects';
+
+    /**
      * Run the migrations.
+     * @table news_subjects
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('news_subjects', function (Blueprint $table) {
-            $table->id();
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'MyISAM';
+            $table->increments('id');
+            $table->string('slug', 32);
+            $table->string('label', 64);
+            $table->string('locale', 5);
+            $table->unsignedInteger('category');
+
+            $table->index(["category"], 'fk_subject_category');
             $table->timestamps();
         });
     }
@@ -26,6 +40,6 @@ class CreateNewsSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news_subjects');
+        Schema::dropIfExists($this->tableName);
     }
 }
