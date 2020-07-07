@@ -66,9 +66,9 @@ class WeatherBackgroundController extends Controller
 
         // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
         WeatherLocation::firstOrCreate(
-            ['country' => $locationParams['country']],
-            ['province' => $locationParams['province']],
-            ['city' => $locationParams['city']]);
+            ['country' => $locationParams['country'],
+            'province' => $locationParams['province'],
+            'city' => $locationParams['city']]);
 
         // Get the locations
         $locations = WeatherLocation::where('country', $locationParams['country'])
