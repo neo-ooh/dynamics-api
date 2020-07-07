@@ -11,4 +11,5 @@ class WeatherRecord extends Model
 	protected $keyType = "string";
 	protected $fillable = array("endpoint", "country", "province", "city", "locale");
 
+
 }

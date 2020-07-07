@@ -71,6 +71,6 @@ class WeatherCacherService
 	        'locale' => $locale]);
 
 	    $record->content = $content;
-	    $record->save();
+	    $record->update();
 	}
 }

@@ -7,20 +7,28 @@ use Illuminate\Database\Migrations\Migration;
 class CreateAuthTokensTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    public $tableName = 'auth_tokens';
+
+    /**
      * Run the migrations.
+     * @table auth_tokens
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('auth_tokens', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'MyISAM';
             $table->increments('id');
             $table->char('token', 64);
             $table->integer('user');
             $table->string('ip', 15);
-            $table->timestamps();
 
-            $table->unique('token');
+            $table->unique(["token"], 'auth_tokens_token_unique');
+            $table->timestamps();
         });
     }
 
@@ -31,6 +39,6 @@ class CreateAuthTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_tokens');
+        Schema::dropIfExists($this->tableName);
     }
 }

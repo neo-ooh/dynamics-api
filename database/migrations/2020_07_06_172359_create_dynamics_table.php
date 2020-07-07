@@ -7,19 +7,27 @@ use Illuminate\Database\Migrations\Migration;
 class CreateDynamicsTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    public $tableName = 'dynamics';
+
+    /**
      * Run the migrations.
+     * @table dynamics
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('dynamics', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'MyISAM';
             $table->increments('id');
-	        $table->char('slug', 10);
+            $table->char('slug', 10);
             $table->char('name', 25);
-            $table->timestamps();
 
-            $table->unique('slug');
+            $table->unique(["slug"], 'dynamics_slug_unique');
+            $table->timestamps();
         });
     }
 
@@ -30,6 +38,6 @@ class CreateDynamicsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dynamics');
+        Schema::dropIfExists($this->tableName);
     }
 }

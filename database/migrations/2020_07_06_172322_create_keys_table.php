@@ -4,23 +4,27 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWeatherBackgroundsTable extends Migration
+class CreateKeysTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    public $tableName = 'keys';
+
+    /**
      * Run the migrations.
+     * @table keys
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('weather_backgrounds', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'MyISAM';
             $table->increments('id');
-            $table->string('country', 2);
-            $table->string('province', 2);
-            $table->string('city', 5);
-            $table->string('weather', 15);
-            $table->string('period', 10);
-            $table->string('support', 3);
+            $table->char('name', 25);
+            $table->char('key', 64);
             $table->timestamps();
         });
     }
@@ -32,6 +36,6 @@ class CreateWeatherBackgroundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weather_backgrounds');
+        Schema::dropIfExists($this->tableName);
     }
 }
