@@ -19,7 +19,7 @@ class CORSMiddleware
 	{
 		// ALLOW OPTIONS METHOD
 		$headers = [
-		    'Access-Control-Allow-sOrigin' => '*',
+		    'Access-Control-Allow-Origin' => '*',
 			'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
 			'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, pragma, cache-control, Authorization, cache'
 		];
