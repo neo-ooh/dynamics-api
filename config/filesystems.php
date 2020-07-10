@@ -48,10 +48,14 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+            'driver' => 's3',
+            'key' => env('DO_SPACE_KEY'),
+            'secret' => env('DO_SPACE_SECRET'),
+            'endpoint' => env('DO_SPACE_ENDPOINT'),
+            'region' => env('DO_SPACE_REGION'),
+            'bucket' => env('DO_SPACE_BUCKET'),
+            'url' => env('DO_SPACE_URL'),
+            'root' => env('DO_SPACE_ROOT'),
         ],
 
         'canadian-press' => [
