@@ -6,6 +6,7 @@ use App\WeatherBackground;
 use App\WeatherLocation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class WeatherBackgroundController extends Controller
@@ -63,6 +64,11 @@ class WeatherBackgroundController extends Controller
             'province' => $request->province ?: '--',
             'city' => $request->city ?: '-'
         ];
+
+        if($locationParams['city'] === 'Repentigny') {
+            Log::debug('Getting request from Repentigny.', $request->all());
+            $locationParams['province'] = 'QC';
+        }
 
         // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
         WeatherLocation::firstOrCreate(
