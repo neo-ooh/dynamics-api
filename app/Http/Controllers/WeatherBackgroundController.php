@@ -60,9 +60,9 @@ class WeatherBackgroundController extends Controller
 		// Start by getting the locations (country, province if specified, and city if specified)
 
         $locationParams = [
-            'country' => $request->country ?: 'CA',
-            'province' => $request->province ?: '--',
-            'city' => $request->city ?: '-'
+            'country' => $request->country?: 'CA',
+            'province' => $request->province != 'null'?: '--',
+            'city' => $request->city != 'null' ?: '-'
         ];
 
         if($locationParams['city'] === 'Repentigny') {
