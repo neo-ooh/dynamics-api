@@ -66,9 +66,10 @@ class WeatherBackgroundController extends Controller
         ];
 
         if($locationParams['city'] === 'Repentigny') {
-            Log::debug('Getting request from Repentigny.', $request->all());
             $locationParams['province'] = 'QC';
         }
+
+        Log::debug('location provided:', $locationParams);
 
         // We do a INSERT IGNORE with the given location to ensure its presence in the ddb
         WeatherLocation::firstOrCreate(
