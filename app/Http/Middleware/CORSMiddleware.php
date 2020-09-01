@@ -25,7 +25,6 @@ class CORSMiddleware
 		];
 
 		if ($request->getMethod() == "OPTIONS") {
-			echo "OPTION";
 			// The client-side application can set only headers allowed in Access-Control-Allow-Headers
 			return Response::make('OK', 200, $headers);
 		}
