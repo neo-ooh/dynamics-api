@@ -81,14 +81,19 @@ class NewsController extends Controller
 
                 // If there's an image and it doesn't already exist, we copy it
                 if($articleInfos['media'] && !Storage::disk('public')->exists(self::MEDIA_FOLDER.$articleInfos['media'])) {
+                    $publicDisk = Storage::disk('public');
                     // The file doesn't exist on our server, let's copy it from the FTP
-                    Storage::disk('public')->writeStream(
+                    $publicDisk->writeStream(
                         self::MEDIA_FOLDER.$articleInfos['media'],
                         $cpStorage->readStream($articleInfos['media'])
                     );
 
                     // Get and store the media dimensions
-                    [$width, $height, $a, $b] = getimagesize(Storage::disk('public')->path(self::MEDIA_FOLDER.$articleInfos['media']));
+                    $contents = $publicDisk->get(self::MEDIA_FOLDER.$articleInfos['media']);
+                    $im = imagecreatefromstring($contents);
+                    $width = imagesx($im) ?? null;
+                    $height = imagesy($im) ?? null;
+
                     $record->media_width = $width;
                     $record->media_height = $height;
                     $record->save();

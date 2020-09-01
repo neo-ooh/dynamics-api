@@ -56,6 +56,7 @@ return [
             'bucket' => env('DO_SPACE_BUCKET'),
             'url' => env('DO_SPACE_URL'),
             'root' => env('DO_SPACE_ROOT'),
+            'visibility' => 'public',
         ],
 
         'canadian-press' => [
