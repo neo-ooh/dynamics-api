@@ -107,7 +107,7 @@ class NewsController extends Controller
 
             // All articles on the FTP have now been treated. We now need to address articles that are no longer here
             foreach ($subjectRecords as $record) {
-                if(in_array($record->id, $insertedRecords)) {g
+                if(in_array($record->id, $insertedRecords)) {
                     // Record is OK
                     continue;
                 }
