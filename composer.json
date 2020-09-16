@@ -9,16 +9,17 @@
     "type": "project",
     "require": {
         "php": "^7.4",
+        "ext-gd": "*",
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "facade/ignition": "^2.0",
         "fideloper/proxy": "^4.3",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "~7.0",
         "laravel/framework": "^7.10",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "orchestra/parser": "^5.0",
-        "ext-gd": "*"
+        "orchestra/parser": "^5.0"
     },
     "require-dev": {
         "filp/whoops": "^2.7",
