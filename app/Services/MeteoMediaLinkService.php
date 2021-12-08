@@ -82,6 +82,9 @@ class MeteoMediaLinkService
 
 	private function buildURL(string $url, string $country, string $province, string $city, string $locale)
 	{
+        // Sanitize city name
+        $city = strtolower(str_replace("'", "", $city));
+
 		$url .= "/" . $country;
 		$url .= "/" . $province;
 		$url .= "/" . $city;
