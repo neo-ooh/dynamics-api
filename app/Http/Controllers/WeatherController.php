@@ -58,7 +58,7 @@ class WeatherController extends Controller
 		$link = new MeteoMediaLinkService();
 		$locale = $request->input('locale', 'en-CA');
 
-		$now = $link->getNow($locale, $country, $province, $city);
+		$now = $link->getNow($locale, $country, $province, $city) ?? [];
 		$longTermResponse = $link->getNext($locale, $country, $province, $city);
 
         $longTerm = $longTermResponse ? ["LongTermPeriod"][0] : [];
