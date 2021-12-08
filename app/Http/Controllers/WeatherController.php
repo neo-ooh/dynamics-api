@@ -59,7 +59,9 @@ class WeatherController extends Controller
 		$locale = $request->input('locale', 'en-CA');
 
 		$now = $link->getNow($locale, $country, $province, $city);
-		$longTerm = $link->getNext($locale, $country, $province, $city)["LongTermPeriod"][0];
+		$longTermResponse = $link->getNext($locale, $country, $province, $city);
+
+        $longTerm = $longTermResponse ? ["LongTermPeriod"][0] : null;
 
 		$forecast = array_merge($longTerm, $now);
 
