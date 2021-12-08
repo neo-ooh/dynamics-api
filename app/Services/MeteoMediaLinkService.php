@@ -9,6 +9,8 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 
 class MeteoMediaLinkService
 {
@@ -64,7 +66,12 @@ class MeteoMediaLinkService
 		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
 
 		$client = new Client();
-		$res = $client->request('GET', $url);
+        try {
+            $res = $client->request('GET', $url);
+        } catch (ClientException $e) {
+            Log::error($e->getMessage());
+            return null;
+        }
 
 		// Error
 		if ($res->getStatusCode() != 200) {
