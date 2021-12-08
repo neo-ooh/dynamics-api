@@ -62,6 +62,8 @@ class MeteoMediaLinkService
 
 //		\Log::info("Fetching new record from API");
 
+        return null;
+
 		// No cached record, let's retrieve a new one
 		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
 
