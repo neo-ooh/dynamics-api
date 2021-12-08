@@ -78,6 +78,8 @@ class MeteoMediaLinkService
 			return null;
 		}
 
+        Log::info("OK", ["url" => $url]);
+
 		// Here's our response
 		$response = $res->getBody()->getContents();
 
