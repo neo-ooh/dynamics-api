@@ -66,10 +66,10 @@ class WeatherController extends Controller
 
         Log::debug("responses", [
             "now" => $now,
-            "longterm" => $longTermResponse,
+            "longterm" => $longTerm,
         ]);
 
-		$forecast = array_merge($longTerm, $now);
+		$forecast = array_merge($now, $longTerm);
 
 		return new Response($forecast);
 	}
