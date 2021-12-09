@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\MeteoMediaLinkService;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 
 class WeatherController extends Controller
 {
@@ -62,6 +63,11 @@ class WeatherController extends Controller
 		$longTermResponse = $link->getNext($locale, $country, $province, $city);
 
         $longTerm = $longTermResponse ? ["LongTermPeriod"][0] : [];
+
+        Log::debug("responses", [
+            "now" => $now,
+            "longterm" => $longTermResponse,
+        ]);
 
 		$forecast = array_merge($longTerm, $now);
 
