@@ -86,7 +86,7 @@ class MeteoMediaLinkService
 		// Let's cache it!
 		$cache->set($endpoint['id'], $country, $province, $city, $locale, $response);
 
-		return json_decode($response, true);
+		return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 	}
 
 	private function buildURL(string $url, string $country, string $province, string $city, string $locale)
