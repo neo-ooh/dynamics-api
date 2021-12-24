@@ -8,7 +8,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.0",
+        "php": "^7.4",
         "ext-gd": "*",
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
@@ -22,6 +22,7 @@
         "orchestra/parser": "^5.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "filp/whoops": "^2.7",
         "fzaninotto/faker": "^1.9",
         "mockery/mockery": "^1.3",
