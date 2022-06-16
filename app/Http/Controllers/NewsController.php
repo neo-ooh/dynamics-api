@@ -22,6 +22,8 @@ class NewsController extends Controller
      * New records will be inserted in the DDB, older ones will be removed, as well as their corresponding media if present
      */
     public function refresh() {
+        Log::debug("[CanadianPress FTP] Refreshing news article...");
+
         // Start by getting all the subjects to parse
         $newsSubjects = NewsSubject::all();
 
@@ -103,8 +105,8 @@ class NewsController extends Controller
                 }
 
                 // Register that this record is live
-                array_push($insertedRecords, $record->id);
-                array_push($parsedArticles, $article);
+                $insertedRecords[] = $record->id;
+                $parsedArticles[]  = $article;
             }
 
             // All articles on the FTP have now been treated. We now need to address articles that are no longer here
