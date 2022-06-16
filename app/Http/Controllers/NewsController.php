@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\NewsCategory;
 use App\NewsRecord;
 use App\NewsSubject;
+use Illuminate\Support\Facades\Log;
 use function count;
 use Exception;
 use Illuminate\Http\Response;
@@ -45,6 +46,7 @@ class NewsController extends Controller
             foreach ($cpArticles as $article) {
                 // Parse the xml file
                 try {
+                    Log::debug("[CanadianPress FTP] Requesting article $article");
                     $articleXML = simplexml_load_string($cpStorage->get($article));
                 }
                 catch (Exception $exception) {
