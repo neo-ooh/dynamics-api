@@ -55,10 +55,12 @@ class MeteoMediaLinkService
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
 		// Cached record was found, let's return it
-		if ($cachedRecord != null) {
+		if ($cachedRecord !== null) {
 //			\Log::info("WeatherRecord found in DDB was ok.");
 			return $cachedRecord;
 		}
+
+        return null;
 
 //		\Log::info("Fetching new record from API");
 
