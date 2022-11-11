@@ -10,9 +10,9 @@ class WeatherControlMiddleware {
     public function handle(Request $request, Closure $next) {
 
         // Disabled
-        return new Response(null, 429);
+//        return new Response(null, 429);
 
         //Enabled
-//        return $next($request);
+        return $next($request);
     }
 }
