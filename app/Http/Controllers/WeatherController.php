@@ -43,14 +43,13 @@ class WeatherController extends Controller
      * Give the current weather for the specified city
      *
      * @param Request $request
+     * @param string  $country
+     * @param string  $province
+     * @param string  $city
      * @return Response
      */
-	public function now(Request $request): Response
+	public function now(Request $request, string $country, string $province, string $city): Response
 	{
-	    $country = $request->input("country");
-        $province = $request->input("province");
-        $city = $request->input("city");
-
 		$this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city) {
             return new Response(null);
@@ -72,17 +71,17 @@ class WeatherController extends Controller
 		return new Response($forecast, 200);
 	}
 
-	/**
-	 * Give the next day weather for the specified location
+    /**
+     * Give the next day weather for the specified location
+     *
      * @param Request $request The request
-	 * @return Response
-	 */
-	public function tomorrow(Request $request): Response
+     * @param string  $country
+     * @param string  $province
+     * @param string  $city
+     * @return Response
+     */
+	public function tomorrow(Request $request, string $country, string $province, string $city): Response
 	{
-        $country = $request->input("country");
-        $province = $request->input("province");
-        $city = $request->input("city");
-
         $this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city) {
             return new Response(null);
@@ -103,17 +102,17 @@ class WeatherController extends Controller
 		return new Response($forecast, 200);
 	}
 
-	/**
-	 * Give the seven days weather for the specified location
+    /**
+     * Give the seven days weather for the specified location
+     *
      * @param Request $request The request
-	 * @return Response
-	 */
-	public function forecast(Request $request): Response
+     * @param string  $country
+     * @param string  $province
+     * @param string  $city
+     * @return Response
+     */
+	public function forecast(Request $request, string $country, string $province, string $city): Response
 	{
-        $country = $request->input("country");
-        $province = $request->input("province");
-        $city = $request->input("city");
-
         $this->sanitizeLocation($country, $province, $city);
 		if(!$country || !$province || !$city) {
             return new Response(null);
@@ -136,15 +135,15 @@ class WeatherController extends Controller
 
     /**
      * Give the next hours weather forecast for the specified location
+     *
      * @param Request $request The request
+     * @param string  $country
+     * @param string  $province
+     * @param string  $city
      * @return Response
      */
-    public function hourly(Request $request): Response
+    public function hourly(Request $request, string $country, string $province, string $city): Response
     {
-        $country = $request->input("country");
-        $province = $request->input("province");
-        $city = $request->input("city");
-
         $this->sanitizeLocation($country, $province, $city);
         if(!$country || !$province || !$city) {
             return new Response(null);
