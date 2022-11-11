@@ -81,7 +81,7 @@ Route::group(["middleware" => "UserTokenVerification"], function () {
 /**
  * Weather dynamic routes
  */
-Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weather']], function () {
+Route::group(['prefix' => 'weather', 'middleware' => ['APIKeyVerification:weather', 'weathercontrol']], function () {
 	Route::get('now/{country}/{province}/{city}', "WeatherController@now")->name("weather.now");
 	Route::get('tomorrow/{country}/{province}/{city}', "WeatherController@tomorrow")->name("weather.tomorrow");
 	Route::get('forecast/{country}/{province}/{city}', "WeatherController@forecast")->name("weather.forecast");

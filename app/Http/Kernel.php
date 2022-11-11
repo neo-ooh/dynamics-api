@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\WeatherControlMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -62,6 +63,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'APIEncapsulation' => \App\Http\Middleware\APIEncapsulation::class,
         'APIKeyVerification' => \App\Http\Middleware\APIKeyVerification::class,
-	    'UserTokenVerification' => \App\Http\Middleware\UserTokenVerification::class
+	    'UserTokenVerification' => \App\Http\Middleware\UserTokenVerification::class,
+        'weathercontrol' => WeatherControlMiddleware::class
     ];
 }
