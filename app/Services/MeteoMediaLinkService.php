@@ -8,9 +8,13 @@
 
 namespace App\Services;
 
+use App\WeatherRecord;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 class MeteoMediaLinkService
 {
@@ -38,57 +42,51 @@ class MeteoMediaLinkService
         return $this->getRecord(self::ENDPOINT_HLY, ...$params);
     }
 
-	/**
-	 * @param        $endpoint
-	 * @param string $locale
-	 * @param string $country
-	 * @param string $province
-	 * @param string $city
-	 * @return mixed
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
+    /**
+     * @param        $endpoint
+     * @param string $locale
+     * @param string $country
+     * @param string $province
+     * @param string $city
+     * @return WeatherRecord|null
+     * @throws GuzzleException
+     * @throws JsonException
+     */
 	private function getRecord($endpoint, string $locale, string $country, string $province, string $city)
 	{
-//		\Log::info("Fetching record for ".$endpoint['id']." ".$country." ".$province." ".$city." ".$locale);
 		// Check cache for presence
 		$cache = new WeatherCacherService();
 		$cachedRecord = $cache->get($endpoint['id'], $country, $province, $city, $locale);
 
-		// Cached record was found, let's return it
-		if ($cachedRecord !== null) {
-//			\Log::info("WeatherRecord found in DDB was ok.");
-			return $cachedRecord;
-		}
+        // No record found in cache, pull one
+        if (!$cachedRecord) {
+            $recordContent = $this->pullRecord($endpoint['url'], $country, $province, $city, $locale);
 
-        return null;
+            if(!$recordContent) {
+                // Could not get record, stop here
+                return null;
+            }
 
-//		\Log::info("Fetching new record from API");
-
-		// No cached record, let's retrieve a new one
-		$url = $this->buildURL($endpoint['url'], $country, $province, $city, $locale);
-
-		$client = new Client();
-        try {
-            $res = $client->request('GET', $url);
-        } catch (ClientException $e) {
-            Log::error($e->getMessage());
-            return null;
+            // Record found, store it
+            return $cache->set($endpoint['id'], $country, $province, $city, $locale, $recordContent);
         }
 
-		// Error
-		if ($res->getStatusCode() != 200) {
-			return null;
-		}
+        // We have a record, is it stale ?
+        $isStale = $cachedRecord->updated_at->diffInSeconds(Carbon::now()) > config('app.api.lifespan');
 
-        Log::info("OK", ["url" => $url]);
+        if($isStale) {
+            // Pull a new record
+            $recordContent = $this->pullRecord($endpoint['url'], $country, $province, $city, $locale);
 
-		// Here's our response
-		$response = $res->getBody()->getContents();
+            if($recordContent) {
+                // We have an updated record, remove previous one
+                $cache->delete($endpoint['id'], $country, $province, $city, $locale);
+                // And store the new one
+                $cachedRecord = $cache->set($endpoint['id'], $country, $province, $city, $locale, $recordContent);
+            }
+        }
 
-		// Let's cache it!
-		$cache->set($endpoint['id'], $country, $province, $city, $locale, $response);
-
-		return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+		return $cachedRecord;
 	}
 
 	private function buildURL(string $url, string $country, string $province, string $city, string $locale)
@@ -104,4 +102,34 @@ class MeteoMediaLinkService
 
 		return $url;
 	}
+
+    /**
+     * @param string $url
+     * @param string $country
+     * @param string $province
+     * @param string $city
+     * @param string $locale
+     * @return array|null
+     * @throws GuzzleException
+     * @throws JsonException
+     */
+    protected function pullRecord(string $url, string $country, string $province, string $city, string $locale) {
+        // Try to get a new version of the record
+        $url = $this->buildURL($url, $country, $province, $city, $locale);
+
+        $recordContent = null;
+        $client = new Client();
+        try {
+            $res = $client->request('GET', $url);
+
+            if ($res->getStatusCode() === 200) {
+                $recordContent = json_decode($res->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            }
+
+        } catch (ClientException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return $recordContent;
+    }
 }
