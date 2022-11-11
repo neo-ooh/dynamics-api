@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Response;
+use Illuminate\Http\Response;
 
 class WeatherControlMiddleware {
     public function handle(Request $request, Closure $next) {
