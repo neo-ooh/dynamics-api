@@ -33,7 +33,7 @@ class WeatherController extends Controller
 		$locale = Request('locale', 'en-CA');
 
 		foreach ($this->cities as $city) {
-            $forecasts[] = $link->getNow($locale, ...$city);
+            $forecasts[] = $link->getNow($locale, ...$city)?->content ?? [];
 		}
 
 		return new Response($forecasts);
