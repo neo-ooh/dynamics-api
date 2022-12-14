@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\MeteoMediaLinkService;
+use Log;
 
 class WeatherController extends Controller
 {
@@ -196,6 +197,9 @@ class WeatherController extends Controller
 
 		// Make sure the city format is valid
 		$city = str_replace(".", "", urldecode($city));
+
+        Log::info($city);
+
 		if(array_key_exists($city, self::CITIES)) {
             $city = self::CITIES[$city];
         }
