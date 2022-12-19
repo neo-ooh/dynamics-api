@@ -183,6 +183,8 @@ class WeatherController extends Controller
 	public const CITIES = [
 		"Ville de Québec" => "Québec",
 		"Boulevard Laurier" => "Québec",
+		"Val-d'Or" => "Val Or",
+		"L'Épiphanie" => "Epiphanie",
 	];
 
 	private function sanitizeLocation(String &$country, String &$province, String &$city): void {
@@ -198,7 +200,7 @@ class WeatherController extends Controller
 		// Make sure the city format is valid
 		$city = str_replace(".", "", urldecode($city));
 
-        Log::info($city);
+//        Log::info($city);
 
 		if(array_key_exists($city, self::CITIES)) {
             $city = self::CITIES[$city];
