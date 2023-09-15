@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 
@@ -125,9 +126,10 @@ class MeteoMediaLinkService
             if ($res->getStatusCode() === 200) {
                 $recordContent = json_decode($res->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             }
-
         } catch (ClientException $e) {
             Log::error($e->getMessage());
+        } catch (RequestException $e) {
+			return null;
         }
 
         return $recordContent;
